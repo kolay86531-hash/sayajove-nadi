@@ -99,6 +99,39 @@ function runNadiLogic(pos) {
         chart[p] = { house: Math.floor(deg / 30), degree: deg % 30 };
     });
 
+// ၁။ Dignities သတ်မှတ်ချက်
+    const dignities = {
+        Sun: { exalt: 0, debilit: 6 },
+        Moon: { exalt: 1, debilit: 7 },
+        Mars: { exalt: 9, debilit: 3 },
+        Mercury: { exalt: 5, debilit: 11 },
+        Jupiter: { exalt: 3, debilit: 9 },
+        Venus: { exalt: 11, debilit: 5 },
+        Saturn: { exalt: 6, debilit: 0 },
+        Rahu: { exalt: 1, debilit: 7 },
+        Ketu: { exalt: 7, debilit: 1 }
+    };
+
+    // ၂။ Dignity စစ်ဆေးသည့် Function
+    const getDignity = (p) => {
+        if (!chart[p] || !dignities[p]) return "";
+        if (chart[p].house === dignities[p].exalt) return "EXALT";
+        if (chart[p].house === dignities[p].debilit) return "DEBILIT";
+        return "";
+    };
+
+    // ၃။ ဂြိုဟ်တစ်ခုချင်းစီကို Dignity စစ်ပြီး Alert ထဲထည့်ခြင်း
+    const planetNamesMM = { Sun:'တနင်္ဂနွေ', Moon:'တနင်္လာ', Mars:'အင်္ဂါ', Mercury:'ဗုဒ္ဓဟူး', Jupiter:'ကြာသပတေး', Venus:'သောကြာ', Saturn:'စနေ', Rahu:'ရာဟု', Ketu:'ကိတ်' };
+
+    Object.keys(dignities).forEach(p => {
+        let status = getDignity(p);
+        if (status === "EXALT") {
+            alerts.push(`🌟 <b>${planetNamesMM[p]}</b> သည် အထူးအားကောင်းသော (ဥုစ်) အခြေအနေတွင် ရှိနေပါသည်။`);
+        } else if (status === "DEBILIT") {
+            alerts.push(`⚠️ <b>${planetNamesMM[p]}</b> သည် အားနည်းသော (နိစ်) အခြေအနေတွင် ရှိနေပါသည်။`);
+        }
+    });
+    
     // နဒီအမြင် (၁၊ ၅၊ ၉၊ ၃၊ ၇၊ ၁၁) စစ်ဆေးခြင်း
     const isAspect = (p1, p2) => {
         if (!chart[p1] || !chart[p2]) return false;
@@ -108,25 +141,7 @@ function runNadiLogic(pos) {
     };
 
 
-    // ဂြိုဟ်များ၏ အထူးအင်အားရှိသော အိမ်များ (Exaltation & Debilitation)
-const dignities = {
-    Sun: { exalt: 0, debilit: 6 },      // မိဿ (1) တွင် အထူးကောင်း၊ တူ (7) တွင် အားနည်း
-    Moon: { exalt: 1, debilit: 7 },     // ပြိဿ (2) တွင် အထူးကောင်း၊ ဗြိစ္ဆာ (8) တွင် အားနည်း
-    Mars: { exalt: 9, debilit: 3 },     // မကာရ (10) တွင် အထူးကောင်း၊ ကရကဋ် (4) တွင် အားနည်း
-    Mercury: { exalt: 5, debilit: 11 }, // ကန် (6) တွင် အထူးကောင်း၊ မိဿ (12) တွင် အားနည်း
-    Jupiter: { exalt: 3, debilit: 9 },  // ကရကဋ် (4) တွင် အထူးကောင်း၊ မကာရ (10) တွင် အားနည်း
-    Venus: { exalt: 11, debilit: 5 },   // မိန် (12) တွင် အထူးကောင်း၊ ကန် (6) တွင် အားနည်း
-    Saturn: { exalt: 6, debilit: 0 },   // တူ (7) တွင် အထူးကောင်း၊ မိဿ (1) တွင် အားနည်း
-    Rahu: { exalt: 1, debilit: 7 },     // ပြိဿ တွင် အထူးကောင်း
-    Ketu: { exalt: 7, debilit: 1 }      // ဗြိစ္ဆာ တွင် အထူးကောင်း
-};
-
-const getDignity = (p) => {
-    if (!chart[p] || !dignities[p]) return "";
-    if (chart[p].house === dignities[p].exalt) return "EXALT";
-    if (chart[p].house === dignities[p].debilit) return "DEBILIT";
-    return "";
-};
+    
 
     
     // အိမ်ဖလှယ်ခြင်း (Parivartana) စစ်ဆေးခြင်း
