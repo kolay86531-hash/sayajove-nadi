@@ -48,6 +48,29 @@
 </div>
 
 <script>
+    function runNadiLogic(pos) {
+    let resultHTML = "";
+    let alerts = [];
+    let chart = {};
+
+    // ဂြိုဟ်တည်နေရာများကို Object ထဲသို့ ပြောင်းခြင်း
+    Object.entries(pos).forEach(([p, deg]) => {
+        chart[p] = { house: Math.floor(deg / 30), degree: deg % 30 };
+    });
+
+    // နဒီအမြင် (၁၊ ၅၊ ၉၊ ၃၊ ၇၊ ၁၁) စစ်ဆေးခြင်း
+    const isAspect = (p1, p2) => {
+        if (!chart[p1] || !chart[p2]) return false;
+        let diff = (chart[p2].house - chart[p1].house + 12) % 12;
+        return [0, 4, 8, 2, 6, 10].includes(diff);
+    };
+
+    // အိမ်ဖလှယ်ခြင်း (Parivartana) စစ်ဆေးခြင်း
+    const isInterchange = (p1, p2) => {
+        if (!chart[p1] || !chart[p2]) return false;
+        return owners[p1]?.includes(chart[p2].house) && owners[p2]?.includes(chart[p1].house);
+    };
+    
 async function calculateNadi() {
     const dob = document.getElementById('dob').value;
     const tob = document.getElementById('tob').value;
@@ -70,6 +93,28 @@ async function calculateNadi() {
             }
         });
 
+            // ဟောချက်များ စုစည်းမှု
+    const effects = [
+        { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
+        { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
+        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus') && isAspect('Jupiter', 'Mercury'), text: "<b>ဓနသိဒ္ဓိယောဂ:</b> ငွေကြေးကံ အလွန်ကောင်းမွန်ပြီး ပညာရှိများ၏ အကူအညီ ရရှိမည်။" },
+        { cat: "marriage", check: () => isAspect('Venus', 'Ketu'), text: "<b>သောကြာ+ကိတ်:</b> အိမ်ထောင်ဖက်မှာ ဘာသာတရား ကိုင်းရှိုင်းသူ ဖြစ်တတ်သည်။" },
+        { cat: "career", check: () => isInterchange('Mars', 'Mercury'), text: "<b>အင်္ဂါ+ဗုဒ္ဓဟူး (အိမ်ဖလှယ်ခြင်း):</b> စကားပြောဆိုရာတွင် အလွန်ထက်မြက်ပြီး နည်းပညာ သို့မဟုတ် စာရင်းအင်းပညာဖြင့် အောင်မြင်မည်။" }
+    ];
+
+    // ဟောချက်များကို အမျိုးအစားအလိုက် ခွဲထုတ်ပြသခြင်း
+    let catNames = { fortune: "ကံကြမ္မာ", career: "အလုပ်အကိုင်", marriage: "အိမ်ထောင်ရေး", family: "မိသားစု", spiritual: "ဝိညာဉ်ရေးရာ" };
+
+    Object.keys(catNames).forEach(c => {
+        let filtered = effects.filter(e => e.cat === c && e.check());
+        if(filtered.length > 0) {
+            resultHTML += `<div class="cat-title">${catNames[c]}</div>`;
+            filtered.forEach(f => { resultHTML += `<div class="res-card">${f.text}</div>`; });
+        }
+    });
+
+    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center;'>ထူးခြားသော နဒီယောဂများ မတွေ့ရှိသေးပါ။</p>";
+}
         resArea.innerHTML = `<div class="cat-title">ဟောချက်များ</div><div class="res-card">တွက်ချက်မှု အောင်မြင်ပါသည်။ (ဟောချက် Logic များ ဆက်လက် ထည့်သွင်းနိုင်ပါပြီ)</div>`;
     } catch(e) {
         resArea.innerHTML = "Error: " + e.message;
