@@ -107,6 +107,28 @@ function runNadiLogic(pos) {
         return [0, 4, 8, 2, 6, 10].includes(diff);
     };
 
+
+    // ဂြိုဟ်များ၏ အထူးအင်အားရှိသော အိမ်များ (Exaltation & Debilitation)
+const dignities = {
+    Sun: { exalt: 0, debilit: 6 },      // မိဿ (1) တွင် အထူးကောင်း၊ တူ (7) တွင် အားနည်း
+    Moon: { exalt: 1, debilit: 7 },     // ပြိဿ (2) တွင် အထူးကောင်း၊ ဗြိစ္ဆာ (8) တွင် အားနည်း
+    Mars: { exalt: 9, debilit: 3 },     // မကာရ (10) တွင် အထူးကောင်း၊ ကရကဋ် (4) တွင် အားနည်း
+    Mercury: { exalt: 5, debilit: 11 }, // ကန် (6) တွင် အထူးကောင်း၊ မိဿ (12) တွင် အားနည်း
+    Jupiter: { exalt: 3, debilit: 9 },  // ကရကဋ် (4) တွင် အထူးကောင်း၊ မကာရ (10) တွင် အားနည်း
+    Venus: { exalt: 11, debilit: 5 },   // မိန် (12) တွင် အထူးကောင်း၊ ကန် (6) တွင် အားနည်း
+    Saturn: { exalt: 6, debilit: 0 },   // တူ (7) တွင် အထူးကောင်း၊ မိဿ (1) တွင် အားနည်း
+    Rahu: { exalt: 1, debilit: 7 },     // ပြိဿ တွင် အထူးကောင်း
+    Ketu: { exalt: 7, debilit: 1 }      // ဗြိစ္ဆာ တွင် အထူးကောင်း
+};
+
+const getDignity = (p) => {
+    if (!chart[p] || !dignities[p]) return "";
+    if (chart[p].house === dignities[p].exalt) return "EXALT";
+    if (chart[p].house === dignities[p].debilit) return "DEBILIT";
+    return "";
+};
+
+    
     // အိမ်ဖလှယ်ခြင်း (Parivartana) စစ်ဆေးခြင်း
     const isInterchange = (p1, p2) => {
         if (!chart[p1] || !chart[p2]) return false;
