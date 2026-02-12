@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SayaJove Nadi Astrology</title>
+    <style>
+        :root { --primary: #1a237e; --accent: #ffd600; --bg: #f5f5f5; --line: #333; }
+        body { font-family: sans-serif; background: var(--bg); padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .chart-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--line); margin: 20px 0; }
+        .house { border: 1px solid var(--line); height: 80px; padding: 5px; font-size: 11px; position: relative; background: #fff; }
+        .house-id { position: absolute; bottom: 2px; right: 4px; color: #eee; font-weight: bold; }
+        .p-tag { color: #0d47a1; font-weight: bold; display: block; margin-bottom: 2px; }
+        .center-box { grid-column: 2 / 4; grid-row: 2 / 4; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px solid var(--line); text-align: center; font-weight: bold; color: var(--primary); }
+        .cat-title { background: #1a237e; color: white; padding: 8px; border-radius: 5px; margin-top: 15px; font-weight: bold; }
+        .res-card { border-left: 5px solid var(--accent); background: #fffde7; padding: 12px; margin: 8px 0; border-radius: 4px; font-size: 14px; }
+        button { width: 100%; background: #1b5e20; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 45%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center; color:var(--primary);">SayaJove နဒီနက္ခတ်ဗေဒင်</h2>
+    <div style="text-align:center; margin-bottom: 20px;">
+        <input type="date" id="dob" value="1985-11-08">
+        <input type="time" id="tob" value="15:03">
+        <button onclick="calculateNadi()">ဇာတာတွက်ချက်မည်</button>
+    </div>
+
+    <div class="chart-grid" id="main-chart">
+        <div class="house" id="h11"><div class="house-id">12</div></div>
+        <div class="house" id="h0"><div class="house-id">1</div></div>
+        <div class="house" id="h1"><div class="house-id">2</div></div>
+        <div class="house" id="h2"><div class="house-id">3</div></div>
+        <div class="house" id="h10"><div class="house-id">11</div></div>
+        <div class="center-box">နဒီဗေဒင်</div>
+        <div class="house" id="h3"><div class="house-id">4</div></div>
+        <div class="house" id="h9"><div class="house-id">10</div></div>
+        <div class="house" id="h4"><div class="house-id">5</div></div>
+        <div class="house" id="h8"><div class="house-id">9</div></div>
+        <div class="house" id="h7"><div class="house-id">8</div></div>
+        <div class="house" id="h6"><div class="house-id">7</div></div>
+        <div class="house" id="h5"><div class="house-id">6</div></div>
+    </div>
+    <div id="result-area"></div>
+</div>
+
+<script>
+async function calculateNadi() {
+    const dob = document.getElementById('dob').value;
+    const tob = document.getElementById('tob').value;
+    const resArea = document.getElementById('result-area');
+    resArea.innerHTML = "တွက်ချက်နေပါသည်...";
+
+    try {
+        const response = await fetch(`/api/calc?dob=${dob}&tob=${tob}`);
+        const data = await response.json();
+        
+        // ဇာတာခွင် သန့်ရှင်းရေးလုပ်
+        for(let i=0; i<12; i++) document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${i+1}</div>`;
+
+        const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'};
+        
+        Object.entries(data.positions).forEach(([p, deg]) => {
+            const sign = Math.floor(deg / 30);
+            if(document.getElementById(`h${sign}`)) {
+                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag">${pAbbr[p] || p} ${Math.floor(deg%30)}°</span>`;
+            }
+        });
+
+        resArea.innerHTML = `<div class="cat-title">ဟောချက်များ</div><div class="res-card">တွက်ချက်မှု အောင်မြင်ပါသည်။ (ဟောချက် Logic များ ဆက်လက် ထည့်သွင်းနိုင်ပါပြီ)</div>`;
+    } catch(e) {
+        resArea.innerHTML = "Error: " + e.message;
+    }
+}
+</script>
+</body>
+</html>
