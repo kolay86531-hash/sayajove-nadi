@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="my">
 <head>
@@ -12,17 +13,19 @@
         .house { border: 1px solid var(--line); height: 80px; padding: 5px; font-size: 11px; position: relative; background: #fff; }
         .house-id { position: absolute; bottom: 2px; right: 4px; color: #eee; font-weight: bold; }
         .p-tag { color: #0d47a1; font-weight: bold; display: block; margin-bottom: 2px; }
-        .center-box { grid-column: 2 / 4; grid-row: 2 / 4; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px solid var(--line); text-align: center; font-weight: bold; color: var(--primary); }
+        .center-box { grid-column: 2 / 4; grid-row: 2 / 4; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border: 1px solid var(--line); text-align: center; font-weight: bold; color: var(--primary); font-size: 14px; }
         .cat-title { background: #1a237e; color: white; padding: 8px; border-radius: 5px; margin-top: 15px; font-weight: bold; }
-        .res-card { border-left: 5px solid var(--accent); background: #fffde7; padding: 12px; margin: 8px 0; border-radius: 4px; font-size: 14px; }
-        button { width: 100%; background: #1b5e20; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 45%; }
+        .res-card { border-left: 5px solid var(--accent); background: #fffde7; padding: 12px; margin: 8px 0; border-radius: 4px; font-size: 14px; line-height: 1.6; }
+        button { width: 100%; background: #1b5e20; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; font-weight: bold; }
+        button:hover { background: #0d3d10; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 44%; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2 style="text-align:center; color:var(--primary);">SayaJove နဒီနက္ခတ်ဗေဒင်</h2>
+    
     <div style="text-align:center; margin-bottom: 20px;">
         <input type="date" id="dob" value="1985-11-08">
         <input type="time" id="tob" value="15:03">
@@ -35,7 +38,7 @@
         <div class="house" id="h1"><div class="house-id">2</div></div>
         <div class="house" id="h2"><div class="house-id">3</div></div>
         <div class="house" id="h10"><div class="house-id">11</div></div>
-        <div class="center-box">နဒီဗေဒင်</div>
+        <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br>Master System</div>
         <div class="house" id="h3"><div class="house-id">4</div></div>
         <div class="house" id="h9"><div class="house-id">10</div></div>
         <div class="house" id="h4"><div class="house-id">5</div></div>
@@ -44,13 +47,51 @@
         <div class="house" id="h6"><div class="house-id">7</div></div>
         <div class="house" id="h5"><div class="house-id">6</div></div>
     </div>
+    
     <div id="result-area"></div>
 </div>
 
 <script>
-    function runNadiLogic(pos) {
+// အိမ်ရှင်များ သတ်မှတ်ချက်
+const owners = { Sun:[4], Moon:[3], Mars:[0,7], Mercury:[2,5], Jupiter:[8,11], Venus:[1,6], Saturn:[9,10] };
+
+async function calculateNadi() {
+    const dob = document.getElementById('dob').value;
+    const tob = document.getElementById('tob').value;
+    const resArea = document.getElementById('result-area');
+    resArea.innerHTML = "<p style='text-align:center;'>တွက်ချက်နေပါသည်...</p>";
+
+    try {
+        const response = await fetch(`/api/calc?dob=${dob}&tob=${tob}`);
+        const data = await response.json();
+        
+        if (data.error) throw new Error(data.error);
+
+        // ဇာတာခွင် သန့်ရှင်းရေးလုပ်
+        for(let i=0; i<12; i++) {
+            document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${i+1}</div>`;
+        }
+
+        const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'};
+        
+        // ဂြိုဟ်များကို ဇာတာခွင်ထဲ ထည့်ခြင်း
+        Object.entries(data.positions).forEach(([p, deg]) => {
+            const sign = Math.floor(deg / 30);
+            if(document.getElementById(`h${sign}`)) {
+                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag">${pAbbr[p] || p} ${Math.floor(deg%30)}°</span>`;
+            }
+        });
+
+        // ဟောချက် Logic များအား ခေါ်ယူခြင်း
+        runNadiLogic(data.positions);
+
+    } catch(e) {
+        resArea.innerHTML = "<div class='res-card' style='color:red;'>Error: " + e.message + "</div>";
+    }
+}
+
+function runNadiLogic(pos) {
     let resultHTML = "";
-    let alerts = [];
     let chart = {};
 
     // ဂြိုဟ်တည်နေရာများကို Object ထဲသို့ ပြောင်းခြင်း
@@ -62,6 +103,7 @@
     const isAspect = (p1, p2) => {
         if (!chart[p1] || !chart[p2]) return false;
         let diff = (chart[p2].house - chart[p1].house + 12) % 12;
+        // နဒီစနစ်အရ အမြင်များ
         return [0, 4, 8, 2, 6, 10].includes(diff);
     };
 
@@ -70,36 +112,15 @@
         if (!chart[p1] || !chart[p2]) return false;
         return owners[p1]?.includes(chart[p2].house) && owners[p2]?.includes(chart[p1].house);
     };
-    
-async function calculateNadi() {
-    const dob = document.getElementById('dob').value;
-    const tob = document.getElementById('tob').value;
-    const resArea = document.getElementById('result-area');
-    resArea.innerHTML = "တွက်ချက်နေပါသည်...";
 
-    try {
-        const response = await fetch(`/api/calc?dob=${dob}&tob=${tob}`);
-        const data = await response.json();
-        
-        // ဇာတာခွင် သန့်ရှင်းရေးလုပ်
-        for(let i=0; i<12; i++) document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${i+1}</div>`;
-
-        const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'};
-        
-        Object.entries(data.positions).forEach(([p, deg]) => {
-            const sign = Math.floor(deg / 30);
-            if(document.getElementById(`h${sign}`)) {
-                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag">${pAbbr[p] || p} ${Math.floor(deg%30)}°</span>`;
-            }
-        });
-
-            // ဟောချက်များ စုစည်းမှု
+    // --- ဟောချက်များ စုစည်းမှု (ဆရာကြီး ဤနေရာတွင် စာသားများ ထပ်တိုးနိုင်ပါသည်) ---
     const effects = [
         { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
         { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Venus') && isAspect('Jupiter', 'Mercury'), text: "<b>ဓနသိဒ္ဓိယောဂ:</b> ငွေကြေးကံ အလွန်ကောင်းမွန်ပြီး ပညာရှိများ၏ အကူအညီ ရရှိမည်။" },
         { cat: "marriage", check: () => isAspect('Venus', 'Ketu'), text: "<b>သောကြာ+ကိတ်:</b> အိမ်ထောင်ဖက်မှာ ဘာသာတရား ကိုင်းရှိုင်းသူ ဖြစ်တတ်သည်။" },
-        { cat: "career", check: () => isInterchange('Mars', 'Mercury'), text: "<b>အင်္ဂါ+ဗုဒ္ဓဟူး (အိမ်ဖလှယ်ခြင်း):</b> စကားပြောဆိုရာတွင် အလွန်ထက်မြက်ပြီး နည်းပညာ သို့မဟုတ် စာရင်းအင်းပညာဖြင့် အောင်မြင်မည်။" }
+        { cat: "career", check: () => isInterchange('Mars', 'Mercury'), text: "<b>အင်္ဂါ+ဗုဒ္ဓဟူး (အိမ်ဖလှယ်ခြင်း):</b> စကားပြောဆိုရာတွင် အလွန်ထက်မြက်ပြီး နည်းပညာ သို့မဟုတ် စာရင်းအင်းပညာဖြင့် အောင်မြင်မည်။" },
+        { cat: "fortune", check: () => isAspect('Sun', 'Jupiter'), text: "<b>တနင်္ဂနွေ+ကြာသပတေး:</b> အစိုးရ သို့မဟုတ် အကြီးအကဲများ၏ အထောက်အပံ့ ရရှိမည်။ ဂုဏ်သိက္ခာကြီးမားသူဖြစ်မည်။" }
     ];
 
     // ဟောချက်များကို အမျိုးအစားအလိုက် ခွဲထုတ်ပြသခြင်း
@@ -109,17 +130,15 @@ async function calculateNadi() {
         let filtered = effects.filter(e => e.cat === c && e.check());
         if(filtered.length > 0) {
             resultHTML += `<div class="cat-title">${catNames[c]}</div>`;
-            filtered.forEach(f => { resultHTML += `<div class="res-card">${f.text}</div>`; });
+            filtered.forEach(f => { 
+                resultHTML += `<div class="res-card">${f.text}</div>`; 
+            });
         }
     });
 
-    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center;'>ထူးခြားသော နဒီယောဂများ မတွေ့ရှိသေးပါ။</p>";
-}
-        resArea.innerHTML = `<div class="cat-title">ဟောချက်များ</div><div class="res-card">တွက်ချက်မှု အောင်မြင်ပါသည်။ (ဟောချက် Logic များ ဆက်လက် ထည့်သွင်းနိုင်ပါပြီ)</div>`;
-    } catch(e) {
-        resArea.innerHTML = "Error: " + e.message;
-    }
+    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center; padding:20px;'>ယခုဇာတာအတွက် ထူးခြားသော နဒီယောဂများ မတွေ့ရှိသေးပါ။</p>";
 }
 </script>
+
 </body>
 </html>
