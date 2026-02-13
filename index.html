@@ -128,19 +128,7 @@ function runNadiLogic(pos) {
     'Saturn':  { exalt: 6,  debilit: 0  }  // တူ ဥုစ်၊ မိဿ နိစ်
 };
 
-const getDignity = (planet) => {
-    // ဇာတာထဲမှာ ဂြိုဟ်ရှိမရှိ အရင်စစ်ပါ
-    if (!chart || !chart[planet]) return "NORMAL";
-    
-    // ဂြိုဟ်ရောက်နေတဲ့ အိမ်နံပါတ်ကို ယူပါ (ပုံထဲကအတိုင်းဆို Ju က 3 ဖြစ်နေရပါမယ်)
-    let currentHouse = chart[planet].house; 
-    let data = dignityTable[planet];
 
-    if (currentHouse === data.exalt) return "EXALT";
-    if (currentHouse === data.debilit) return "DEBILIT";
-    
-    return "NORMAL";
-};
 const getDignity = (planet) => {
     if (!chart || !chart[planet]) return "NONE";
     let currentHouse = chart[planet].house;
