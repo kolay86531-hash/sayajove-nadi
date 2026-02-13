@@ -109,29 +109,7 @@ function runNadiLogic(pos) {
     };
 
 
-        // ဂြိုဟ်များ၏ ဥုစ် နှင့် နိစ် ရာသီများ သတ်မှတ်ချက်
-    const dignityTable = {
-        'Sun':     { exalt: 0,  debilit: 6  }, // မိဿ ဥုစ်၊ တူ နိစ်
-        'Moon':    { exalt: 1,  debilit: 7  }, // ပြိဿ ဥုစ်၊ ဗြိစ္ဆာ နိစ်
-        'Mars':    { exalt: 9,  debilit: 3  }, // မကာရ ဥုစ်၊ ကရကဋ် နိစ်
-        'Mercury': { exalt: 5,  debilit: 11 }, // ကန် ဥုစ်၊ မိန် နိစ်
-        'Jupiter': { exalt: 3,  debilit: 9  }, // ကရကဋ် ဥုစ်၊ မကာရ နိစ်
-        'Venus':   { exalt: 11, debilit: 5  }, // မိန် ဥုစ်၊ ကန် နိစ်
-        'Saturn':  { exalt: 6,  debilit: 0  }  // တူ ဥုစ်၊ မိဿ နိစ်
-    };
-
-    const getDignity = (planet) => {
-        if (!chart[planet] || !dignityTable[planet]) return "NONE";
         
-        let currentHouse = chart[planet].house; // ဂြိုဟ်ရောက်နေတဲ့ ရာသီအိမ် (0-11)
-        let data = dignityTable[planet];
-
-        if (currentHouse === data.exalt) return "EXALT"; // ဥုစ်
-        if (currentHouse === data.debilit) return "DEBILIT"; // နိစ်
-        
-        return "NORMAL";
-    };
-    
 
     
     // အိမ်ဖလှယ်ခြင်း (Parivartana) စစ်ဆေးခြင်း
