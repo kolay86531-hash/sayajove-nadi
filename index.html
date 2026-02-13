@@ -141,7 +141,24 @@ const getDignity = (planet) => {
     
     return "NORMAL";
 };
+const getDignity = (planet) => {
+    if (!chart || !chart[planet]) return "NONE";
+    let currentHouse = chart[planet].house;
+    let data = dignityTable[planet];
 
+    if (currentHouse === data.exalt) return "EXALT";
+    if (currentHouse === data.debilit) return "DEBILIT";
+    
+    // မိမိအိမ် (Own House) စစ်ဆေးခြင်း
+    const owners = {
+        'Sun': [4], 'Moon': [3], 'Mars': [0, 7], 'Mercury': [2, 5],
+        'Jupiter': [8, 11], 'Venus': [1, 6], 'Saturn': [9, 10]
+    };
+    if (owners[planet] && owners[planet].includes(currentHouse)) return "OWN";
+
+    return "NORMAL";
+};
+    
 const isSameHouse = (p1, p2) => {
     if (!chart[p1] || !chart[p2]) return false;
     return chart[p1].house === chart[p2].house;
@@ -247,9 +264,59 @@ const isSameHouse = (p1, p2) => {
         cat: "spiritual",
         check: () => isAspect('Jupiter', 'Saturn') && isAspect('Jupiter', 'Ketu'),
         text: "<b>ကြာသပတေး+စနေ+ကိတ်:</b> ဘဝ၏ နောက်ဆုံးအချိန်တွင် ဘာသာရေး၊ ဝိညာဉ်ရေးရာများဖြင့် အေးချမ်းစွာ ကုန်ဆုံးရမည်။ တရားဓမ္မ၌ ထူးခြားစွာ ပေါက်မြောက်တတ်သည်။"
-    }
+    },
 
             
+    // ၁။ Political Struggle (စနေ+တနင်္ဂနွေ+ရာဟု+ကိတ်)
+    { 
+        cat: "career", 
+        check: () => isAspect('Saturn', 'Sun') && isAspect('Saturn', 'Rahu') && isAspect('Saturn', 'Ketu'), 
+        text: "<b>Political Struggle:</b> အာဏာပိုင်များနှင့် ပတ်သက်၍ အခက်အခဲများ၊ အမှုအခင်းများ သို့မဟုတ် နာမည်ဖျက်ခြင်း ခံရတတ်သည်။ သို့သော် ဝိညာဉ်ရေးရာ အားကိုးမှုနှင့် သည်းခံနိုင်စွမ်းကြောင့် နောက်ဆုံးတွင် အောင်မြင်မှု ပြန်လည်ရရှိမည်။" 
+    },
+
+    // ၂။ Blessed with Progeny (တနင်္လာ+သောကြာ+ကြာသပတေး ဥုစ်)
+    { 
+        cat: "family", 
+        check: () => isAspect('Moon', 'Venus') && isAspect('Moon', 'Jupiter') && getDignity('Jupiter') === "EXALT", 
+        text: "<b>Blessed with Progeny:</b> သားသမီးကံ အလွန်ကောင်းသည်။ ထွန်းကားလာမည့် သားသမီးများသည် လိမ်မာယဉ်ကျေးရုံသာမက မိဘထက်ပင် ပိုမိုကျော်ကြားမည့်သူများ ဖြစ်လာမည်။" 
+    },
+
+    // ၃။ Supreme Consultant (ဗုဒ္ဓဟူး+စနေ+ကြာသပတေး+တနင်္ဂနွေ)
+    { 
+        cat: "career", 
+        check: () => isAspect('Mercury', 'Saturn') && isAspect('Mercury', 'Jupiter') && isAspect('Mercury', 'Sun'), 
+        text: "<b>Supreme Consultant:</b> အဆင့်မြင့် အကြံပေးပုဂ္ဂိုလ် သို့မဟုတ် မူဝါဒချမှတ်သူ ဖြစ်မည်။ ရှုပ်ထွေးသော ပြဿနာများကို လွယ်ကူစွာ ဖြေရှင်းနိုင်စွမ်းရှိသဖြင့် အစိုးရနှင့် ကုမ္ပဏီကြီးများက အားကိုးရသူ ဖြစ်လိမ့်မည်။" 
+    },
+
+    // ၄။ Accident Warning (အင်္ဂါ+ကိတ်+တနင်္လာ+စနေ)
+    { 
+        cat: "health", 
+        check: () => isAspect('Mars', 'Ketu') && isAspect('Mars', 'Moon') && isAspect('Mars', 'Saturn'), 
+        text: "<b>Accident Warning:</b> ခရီးသွားလာရာတွင်လည်းကောင်း၊ စက်ကိရိယာများ ကိုင်တွယ်ရာတွင်လည်းကောင်း အထူးသတိပြုရမည်။ ရုတ်တရက် မတော်တဆမှု သို့မဟုတ် သွေးထွက်သံယို ဖြစ်တတ်သော ကံပါရှိသည်။" 
+    },
+
+    // ၅။ Dharma-Karmadhipati Yoga (တနင်္ဂနွေ+တနင်္လာ+အင်္ဂါ+ကြာသပတေး)
+    { 
+        cat: "fortune", 
+        check: () => isAspect('Sun', 'Moon') && isAspect('Sun', 'Mars') && isAspect('Sun', 'Jupiter'), 
+        text: "<b>Dharma-Karmadhipati Yoga:</b> အလွန်မြင့်မြတ်သော ယုဂ်ဖြစ်သည်။ ဘဝတွင် မှန်ကန်သော လမ်းကြောင်းပေါ်၌ ရပ်တည်ခြင်းကြောင့် ဘုန်းကံကြီးမားမည်။ လူနတ်အများ၏ ချစ်ခင်လေးစားမှုကို ခံရမည့် ဇာတာရှင်ဖြစ်သည်။" 
+    },
+
+    // ၆။ Emotional Hardship (စနေ+တနင်္လာ+သောကြာ နိစ်)
+    { 
+        cat: "marriage", 
+        check: () => isAspect('Saturn', 'Moon') && isAspect('Saturn', 'Venus') && getDignity('Venus') === "DEBILIT", 
+        text: "<b>Emotional Hardship:</b> အချစ်ရေး သို့မဟုတ် အိမ်ထောင်ရေးတွင် စိတ်ပျက်အားငယ်စရာများ၊ လှည့်ဖြားခံရမှုများ ကြုံရတတ်သည်။ စိတ်ဓာတ်ကျလွယ်တတ်သဖြင့် သတိပြုရမည်။" 
+    },
+
+    // ၇။ Master of Education (ကြာသပတေး+တနင်္ဂနွေ+ဗုဒ္ဓဟူး မိမိအိမ်)
+    { 
+        cat: "spiritual", 
+        check: () => isAspect('Jupiter', 'Sun') && isAspect('Jupiter', 'Mercury') && getDignity('Jupiter') === "OWN", 
+        text: "<b>Master of Education:</b> ပညာရေးနယ်ပယ်တွင် ထိပ်တန်းသို့ ရောက်ရှိမည်။ တက္ကသိုလ်အကြီးအကဲ၊ ပညာရှင် သို့မဟုတ် နာမည်ကျော် ဆရာကြီး ဖြစ်လာလိမ့်မည်။" 
+    }
+
+
     ];
 
     // ဟောချက်များကို အမျိုးအစားအလိုက် ခွဲထုတ်ပြသခြင်း
