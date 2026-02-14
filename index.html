@@ -126,19 +126,7 @@ function runNadiLogic(pos) {
     'Venus':   { exalt: 11, debilit: 5  }, // မိန် ဥုစ်၊ ကန် နိစ်
     'Saturn':  { exalt: 6,  debilit: 0  }  // တူ ဥုစ်၊ မိဿ နိစ်
 };
-const isShakataPos = () => {
-    if (!chart['Jupiter'] || !chart['Moon']) return false;
-    let jPos = chart['Jupiter'].house; // ၀ မှ ၁၁ အထိ
-    let mPos = chart['Moon'].house;
-    
-    // ကြာသပတေးမှ တနင်္လာသို့ အိမ်အရေအတွက် တွက်ခြင်း
-    let dist = (mPos - jPos + 12) % 12 + 1;
-    
-    // ၆ အိမ် (ဆဋ္ဌဌ) သို့မဟုတ် ၈ အိမ် (အဋ္ဌမ) ဖြစ်မဖြစ် စစ်ဆေးခြင်း
-    // (မှတ်ချက် - လဂ်ကနေ တွက်တာမဟုတ်ဘဲ ကြာသပတေးကနေ တွက်တာပါ)
-    return dist === 6 || dist === 8;
-};
-    
+
 
 const getDignity = (planet) => {
     if (!chart || !chart[planet]) return "NONE";
@@ -165,6 +153,44 @@ const isSameHouse = (p1, p2) => {
     return chart[p1].house === chart[p2].house;
 };
 
+    const isKalaSarpaYoga = () => {
+    if (!chart || !chart['Rahu'] || !chart['Ketu']) return false;
+    
+    let rPos = chart['Rahu'].house;
+    let kPos = chart['Ketu'].house;
+    
+    // ရာဟုမှ ကိတ်အထိ အိမ်အရေအတွက်ကို ပတ်ချာလည်စနစ်ဖြင့် စစ်ဆေးခြင်း
+    let planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+    
+    // နာရီလက်တံအတိုင်း (Clockwise) စစ်ဆေးခြင်း
+    let countCW = 0;
+    planets.forEach(p => {
+        if (chart[p]) {
+            let h = chart[p].house;
+            // ဂြိုဟ်သည် ရာဟု နှင့် ကိတ် ကြားထဲမှာ ရှိမရှိ စစ်ဆေးခြင်း
+            if ((rPos < kPos && h > rPos && h < kPos) || 
+                (rPos > kPos && (h > rPos || h < kPos))) {
+                countCW++;
+            }
+        }
+    });
+
+    // နာရီလက်တံပြောင်းပြန် (Counter-Clockwise) စစ်ဆေးခြင်း
+    let countCCW = 0;
+    planets.forEach(p => {
+        if (chart[p]) {
+            let h = chart[p].house;
+            if ((kPos < rPos && h > kPos && h < rPos) || 
+                (kPos > rPos && (h > kPos || h < rPos))) {
+                countCCW++;
+            }
+        }
+    });
+
+    // ဂြိုဟ် ၇ လုံးလုံး တစ်ဖက်ဖက်မှာ စုနေမှသာ ကာလသရ္ပယုဂ် မြောက်ပါသည်
+    return countCW === 7 || countCCW === 7;
+};
+    
     
     // --- ဟောချက်များ စုစည်းမှု (ဆရာကြီး ဤနေရာတွင် စာသားများ ထပ်တိုးနိုင်ပါသည်) ---
     const effects = [
