@@ -1,4 +1,4 @@
-
+သ
 <!DOCTYPE html>
 <html lang="my">
 <head>
@@ -146,85 +146,12 @@ const getDignity = (planet) => {
     return "NORMAL";
 };
 
-// ၁။ သကပ်ယုဂ် (Shakata Yoga) တွက်ချက်သည့် Logic
-const isShakataPos = () => {
-    if (!chart['Jupiter'] || !chart['Moon']) return false;
-    let jPos = chart['Jupiter'].house;
-    let mPos = chart['Moon'].house;
-    let dist = (mPos - jPos + 12) % 12 + 1;
-    return dist === 6 || dist === 8;
-};
 
-// ၂။ ကာလသရ္ပယုဂ် (Kala Sarpa Yoga) တွက်ချက်သည့် Logic
-const isKalaSarpaYoga = () => {
-    if (!chart || !chart['Rahu'] || !chart['Ketu']) return false;
-    let rPos = chart['Rahu'].house;
-    let kPos = chart['Ketu'].house;
-    let planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
-    
-    let countCW = 0;
-    planets.forEach(p => {
-        if (chart[p]) {
-            let h = chart[p].house;
-            if ((rPos < kPos && h > rPos && h < kPos) || 
-                (rPos > kPos && (h > rPos || h < kPos))) countCW++;
-        }
-    });
-
-    let countCCW = 0;
-    planets.forEach(p => {
-        if (chart[p]) {
-            let h = chart[p].house;
-            if ((kPos < rPos && h > kPos && h < rPos) || 
-                (kPos > rPos && (h > kPos || h < rPos))) countCCW++;
-        }
-    });
-    return countCW === 7 || countCCW === 7;
-};
-                           
-    
 const isSameHouse = (p1, p2) => {
     if (!chart[p1] || !chart[p2]) return false;
     return chart[p1].house === chart[p2].house;
 };
 
-    const isKalaSarpaYoga = () => {
-    if (!chart || !chart['Rahu'] || !chart['Ketu']) return false;
-    
-    let rPos = chart['Rahu'].house;
-    let kPos = chart['Ketu'].house;
-    
-    // ရာဟုမှ ကိတ်အထိ အိမ်အရေအတွက်ကို ပတ်ချာလည်စနစ်ဖြင့် စစ်ဆေးခြင်း
-    let planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
-    
-    // နာရီလက်တံအတိုင်း (Clockwise) စစ်ဆေးခြင်း
-    let countCW = 0;
-    planets.forEach(p => {
-        if (chart[p]) {
-            let h = chart[p].house;
-            // ဂြိုဟ်သည် ရာဟု နှင့် ကိတ် ကြားထဲမှာ ရှိမရှိ စစ်ဆေးခြင်း
-            if ((rPos < kPos && h > rPos && h < kPos) || 
-                (rPos > kPos && (h > rPos || h < kPos))) {
-                countCW++;
-            }
-        }
-    });
-
-    // နာရီလက်တံပြောင်းပြန် (Counter-Clockwise) စစ်ဆေးခြင်း
-    let countCCW = 0;
-    planets.forEach(p => {
-        if (chart[p]) {
-            let h = chart[p].house;
-            if ((kPos < rPos && h > kPos && h < rPos) || 
-                (kPos > rPos && (h > kPos || h < rPos))) {
-                countCCW++;
-            }
-        }
-    });
-
-    // ဂြိုဟ် ၇ လုံးလုံး တစ်ဖက်ဖက်မှာ စုနေမှသာ ကာလသရ္ပယုဂ် မြောက်ပါသည်
-    return countCW === 7 || countCCW === 7;
-};
     
     
     // --- ဟောချက်များ စုစည်းမှု (ဆရာကြီး ဤနေရာတွင် စာသားများ ထပ်တိုးနိုင်ပါသည်) ---
@@ -287,34 +214,7 @@ const isSameHouse = (p1, p2) => {
         
         
          
-        // ၁။ ကာလသရ္ပယုဂ် (Kala Sarpa Yoga) - နဂါးပတ်ယုဂ်
-        { 
-            cat: "fortune", 
-            check: () => isKalaSarpaYoga(), // ဤ logic ကို အောက်တွင် ထည့်ပေးထားပါသည်
-            text: "<b>ကာလသရ္ပယုဂ် (Kala Sarpa Yoga):</b> <br>ဂြိုဟ်အားလုံးသည် ရာဟုနှင့် ကိတ်ဂြိုဟ်နှစ်လုံး၏ ကြားတွင် ညှပ်နေသော အလွန်ထူးခြားသော အဆိုးယုဂ်ဖြစ်သည်။ ဤဇာတာရှင်သည် ဘဝတွင် အောင်မြင်ခါနီးမှ လက်လွှတ်ရခြင်း၊ အတိုက်အခိုက် အလွန်များခြင်းနှင့် စိတ်သောကရောက်ရခြင်းများ ကြုံရတတ်သည်။ 'နဂါးပတ်' ထားသကဲ့သို့ ရုန်းထွက်ရခက်သော အခြေအနေမျိုး ကြုံရတတ်သော်လည်း ဘာသာရေးနှင့် ကုသိုလ်ကောင်းမှု အားပြုပါက အသက် (၃၃) နှစ်နောက်ပိုင်းတွင် အံ့ဩဖွယ်ရာ အောင်မြင်မှုများ ပြန်လည်ရရှိတတ်သည်။" 
-        },
-
-        // ၂။ သကပ်ယုဂ် (Shakata Yoga) - လှည်းဘီးကဲ့သို့ ဘဝအတက်အကျများခြင်း
-        { 
-            cat: "fortune", 
-            check: () => isAspect('Jupiter', 'Moon') && isShakataPos(), 
-            text: "<b>သကပ်ယုဂ် (Shakata Yoga):</b> <br>ကြာသပတေးနှင့် တနင်္လာတို့သည် တစ်ခုနှင့်တစ်ခု (၆) အိမ်၊ (၈) အိမ် အနေအထား (ဆဋ္ဌဌ၊ အဋ္ဌမ) ဖြစ်နေခြင်းဖြစ်သည်။ လှည်းဘီးလည်နေသကဲ့သို့ပင် ဇာတာရှင်၏ ဘဝသည် အလွန်ချမ်းသာလိုက်၊ အလွန်ဆင်းရဲလိုက်ဖြင့် အတက်အကျ အလွန်ကြမ်းတမ်းတတ်သည်။ စီးပွားဥစ္စာ ရှာဖွေရာတွင် တည်ငြိမ်မှုမရှိဘဲ ခက်ခဲစွာ ရုန်းကန်ရတတ်သဖြင့် စုဆောင်းမှုပိုင်းကို အထူးဂရုစိုက်သင့်သည်။" 
-        },
-
-        // ၃။ ဂုရုစဏ္ဍာလယုဂ် (Guru-Chandala Yoga) - ပညာရှင်နှင့် လူမိုက်ပေါင်းစပ်ခြင်း
-        { 
-            cat: "spiritual", 
-            check: () => isAspect('Jupiter', 'Rahu') || isSameHouse('Jupiter', 'Rahu'), 
-            text: "<b>ဂုရုစဏ္ဍာလယုဂ် (Guru-Chandala Yoga):</b> <br>ကြာသပတေးနှင့် ရာဟုတို့ ပူးယှဉ်ခြင်း သို့မဟုတ် အမြင်ရခြင်းဖြစ်သည်။ ဇာတာရှင်သည် ဉာဏ်ထက်မြက်သော်လည်း ပတ်ဝန်းကျင်၏ သွေဖည်သော အယူအဆများကို လက်ခံတတ်သည်။ ဘာသာရေးနှင့် လူမှုရေး စည်းကမ်းများကို ဖောက်ဖျက်ချင်သော စိတ်ဆန္ဒ ရှိတတ်သည်။ ပညာတတ်သော်လည်း လွဲမှားသော လမ်းကြောင်းသို့ ရောက်သွားတတ်သဖြင့် ဆရာကောင်း၊ သမားကောင်းများ၏ လမ်းညွှန်မှုကို အမြဲယူရန် လိုအပ်သော ဇာတာဖြစ်သည်။" 
-        },
-
-        // ၄။ အင်္ဂါရကယုဂ် (Angaraka Yoga) - စိတ်တိုဒေါသကြီးသောယုဂ်
-        { 
-            cat: "health", 
-            check: () => isAspect('Mars', 'Rahu') || isSameHouse('Mars', 'Rahu'), 
-            text: "<b>အင်္ဂါရကယုဂ် (Angaraka Yoga):</b> <br>အင်္ဂါနှင့် ရာဟုတို့ ပေါင်းစပ်ခြင်းဖြစ်သည်။ မီးတောင်ပေါက်ကွဲသကဲ့သို့ ပြင်းထန်သော ဒေါသမာန် ရှိတတ်သည်။ စိတ်လိုက်မာန်ပါ လုပ်ရပ်များကြောင့် ဘဝတွင် နောင်တရစရာများ ကြုံရတတ်သည်။ မတော်တဆ ထိခိုက်မှု၊ သွေးထွက်သံယိုဖြစ်မှုနှင့် ခွဲစိတ်မှုများကို သတိပြုရမည်။ စိတ်ရှည်သည်းခံခြင်းနှင့် မေတ္တာဘာဝနာ ပွားများခြင်းဖြင့်သာ ဤယုဂ်၏ အဆိုးများကို ပြယ်ဖျောက်နိုင်မည်ဖြစ်သည်။" 
-        },
-    
+        
    
         
         { 
