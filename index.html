@@ -146,7 +146,42 @@ const getDignity = (planet) => {
     return "NORMAL";
 };
 
+// ၁။ သကပ်ယုဂ် (Shakata Yoga) တွက်ချက်သည့် Logic
+const isShakataPos = () => {
+    if (!chart['Jupiter'] || !chart['Moon']) return false;
+    let jPos = chart['Jupiter'].house;
+    let mPos = chart['Moon'].house;
+    let dist = (mPos - jPos + 12) % 12 + 1;
+    return dist === 6 || dist === 8;
+};
 
+// ၂။ ကာလသရ္ပယုဂ် (Kala Sarpa Yoga) တွက်ချက်သည့် Logic
+const isKalaSarpaYoga = () => {
+    if (!chart || !chart['Rahu'] || !chart['Ketu']) return false;
+    let rPos = chart['Rahu'].house;
+    let kPos = chart['Ketu'].house;
+    let planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
+    
+    let countCW = 0;
+    planets.forEach(p => {
+        if (chart[p]) {
+            let h = chart[p].house;
+            if ((rPos < kPos && h > rPos && h < kPos) || 
+                (rPos > kPos && (h > rPos || h < kPos))) countCW++;
+        }
+    });
+
+    let countCCW = 0;
+    planets.forEach(p => {
+        if (chart[p]) {
+            let h = chart[p].house;
+            if ((kPos < rPos && h > kPos && h < rPos) || 
+                (kPos > rPos && (h > kPos || h < rPos))) countCCW++;
+        }
+    });
+    return countCW === 7 || countCCW === 7;
+};
+                           
     
 const isSameHouse = (p1, p2) => {
     if (!chart[p1] || !chart[p2]) return false;
