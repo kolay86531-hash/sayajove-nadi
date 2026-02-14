@@ -152,7 +152,12 @@ const isSameHouse = (p1, p2) => {
     return chart[p1].house === chart[p2].house;
 };
 
-    
+    const isMaleficInHouse = (houseNo) => {
+    let targetHouse = (houseNo + 12) % 12;
+    let malefics = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
+    return malefics.some(p => chart[p] && chart[p].house === targetHouse);
+};
+
     // အဆိုးလွှမ်းမိုးမှု Score ကို တွက်ချက်သည့် Function
 const getMaleficScore = () => {
     let score = 0;
@@ -177,16 +182,7 @@ const getMaleficScore = () => {
 };
     
     
-   // အိမ်တစ်အိမ်တွင် အဆိုးဂြိုဟ် (စနေ၊ အင်္ဂါ၊ ရာဟု၊ ကိတ်) ရှိမရှိ စစ်ဆေးသည့် Function
-const isMaleficInHouse = (houseNo) => {
-    if (!chart) return false;
-    // အိမ်နံပါတ်ကို ၀ မှ ၁၁ ကြား ရောက်အောင် ညှိခြင်း (ဥပမာ - ၁ အိမ်ထက်လျော့ရင် ၁၁ ဖြစ်သွားစေရန်)
-    let targetHouse = (houseNo + 12) % 12; 
-    
-    let malefics = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
-    return malefics.some(p => chart[p] && chart[p].house === targetHouse);
-};
-                      
+   
     
     const isShakataPos = () => {
     if (!chart || !chart['Jupiter'] || !chart['Moon']) return false;
@@ -555,25 +551,8 @@ const isKalaSarpaYoga = () => {
     cat: "danger", 
     check: () => isSameHouse('Mars', 'Saturn') || isAspect('Saturn', 'Mars'), 
     text: "<b>ဒါရုဏယုဂ် (Daruna Yoga) - ရက်စက်မှုယုဂ်: </b> <br>အင်္ဂါနှင့် စနေတို့၏ ပြင်းထန်သော ပေါင်းစပ်မှုကြောင့် ဇာတာရှင်သည် စိတ်ကြမ်းကိုယ်ကြမ်း ရှိတတ်သည်။ တစ်ပါးသူ၏ ဒုက္ခကို ကိုယ်ချင်းစာစိတ် နည်းပါးပြီး၊ အကြမ်းဖက်မှုနှင့် သက်ဆိုင်သော ကိစ္စများတွင် ပါဝင်ပတ်သက်တတ်သဖြင့် ဥပဒေဘောင်အတွင်း နေထိုင်ရန် အထူးသတိပြုရမည်။" 
-},
+}
 
-        { 
-    cat: "warning", 
-    check: () => {
-        if(!chart['Jupiter']) return false;
-        let juPos = chart['Jupiter'].house;
-        // ကြာသပတေး၏ ရှေ့အိမ် (juPos - 1) နှင့် နောက်အိမ် (juPos + 1) တွင် အဆိုးဂြိုဟ်ရှိခြင်း
-        return isMaleficInHouse(juPos - 1) && isMaleficInHouse(juPos + 1);
-    },
-    text: "<b>ပါပကတ္တရီယုဂ် (ညှပ်ယုဂ်):</b> <br>မိမိ၏ ကံကြမ္မာနှင့် အသိဉာဏ်ကို ကိုယ်စားပြုသော ကြာသပတေးဂြိုဟ်သည် အဆိုးဂြိုဟ်များအကြား ညှပ်နေပါသည်။ ဤအချက်ကြောင့် ဇာတာရှင်သည် ကောင်းမှုပြုရန် ခက်ခဲခြင်း၊ ပတ်ဝန်းကျင်ဆိုး၏ လွှမ်းမိုးမှုကို ခံရခြင်းနှင့် ဘဝတွင် အကျဉ်းအကြပ်ထဲသို့ မကြာခဏ ရောက်ရှိသွားတတ်ပါသည်။" 
-        }
-        
-
-        
-        
-        
-    
- 
 
 
     ];
