@@ -109,30 +109,7 @@ function runNadiLogic(pos) {
     };
 
 
-       const isKalaSarpaYoga = () => {
-    if (!chart['Rahu'] || !chart['Ketu']) return false;
-    let rPos = chart['Rahu'].house;
-    let kPos = chart['Ketu'].house;
-    
-    // ရာဟု နှင့် ကိတ် ကြားရှိ အိမ်များကို သတ်မှတ်ခြင်း
-    let start = Math.min(rPos, kPos);
-    let end = Math.max(rPos, kPos);
-    
-    let planetsInside = 0;
-    let planets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'];
-    
-    planets.forEach(p => {
-        if (chart[p]) {
-            let h = chart[p].house;
-            if (h >= start && h <= end) planetsInside++;
-        }
-    });
-    
-    // ဂြိုဟ် (၇) လုံးလုံး ကြားထဲရောက်နေရင် Kala Sarpa ဖြစ်သည်
-    return planetsInside === 7;
-};
- 
-
+       
     
     // အိမ်ဖလှယ်ခြင်း (Parivartana) စစ်ဆေးခြင်း
     const isInterchange = (p1, p2) => {
@@ -168,6 +145,18 @@ const getDignity = (planet) => {
 
     return "NORMAL";
 };
+// သကပ်ယုဂ်အတွက် ဂြိုဟ်အနေအထား စစ်ဆေးသည့် Logic
+const isShakataPos = () => {
+    if (!chart['Jupiter'] || !chart['Moon']) return false;
+    let jPos = chart['Jupiter'].house;
+    let mPos = chart['Moon'].house;
+    
+    // ၆ အိမ်၊ ၈ အိမ် (ဆဋ္ဌဌ၊ အဋ္ဌမ) အကွာအဝေးကို တွက်ခြင်း
+    let diff = Math.abs(jPos - mPos);
+    return diff === 5 || diff === 7 || diff === 6 || diff === 8; 
+};
+    
+
     
 const isSameHouse = (p1, p2) => {
     if (!chart[p1] || !chart[p2]) return false;
