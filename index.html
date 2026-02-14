@@ -145,24 +145,26 @@ const getDignity = (planet) => {
 
     return "NORMAL";
 };
-// သကပ်ယုဂ်အတွက် ဂြိုဟ်အနေအထား စစ်ဆေးသည့် Logic
-const isShakataPos = () => {
-    if (!chart['Jupiter'] || !chart['Moon']) return false;
-    let jPos = chart['Jupiter'].house;
-    let mPos = chart['Moon'].house;
-    
-    // ၆ အိမ်၊ ၈ အိမ် (ဆဋ္ဌဌ၊ အဋ္ဌမ) အကွာအဝေးကို တွက်ခြင်း
-    let diff = Math.abs(jPos - mPos);
-    return diff === 5 || diff === 7 || diff === 6 || diff === 8; 
-};
-    
+
 
     
 const isSameHouse = (p1, p2) => {
     if (!chart[p1] || !chart[p2]) return false;
     return chart[p1].house === chart[p2].house;
 };
-
+const isShakataPos = () => {
+    if (!chart['Jupiter'] || !chart['Moon']) return false;
+    let jPos = chart['Jupiter'].house; // ၀ မှ ၁၁ အထိ
+    let mPos = chart['Moon'].house;
+    
+    // ကြာသပတေးမှ တနင်္လာသို့ အိမ်အရေအတွက် တွက်ခြင်း
+    let dist = (mPos - jPos + 12) % 12 + 1;
+    
+    // ၆ အိမ် (ဆဋ္ဌဌ) သို့မဟုတ် ၈ အိမ် (အဋ္ဌမ) ဖြစ်မဖြစ် စစ်ဆေးခြင်း
+    // (မှတ်ချက် - လဂ်ကနေ တွက်တာမဟုတ်ဘဲ ကြာသပတေးကနေ တွက်တာပါ)
+    return dist === 6 || dist === 8;
+};
+    
     
     // --- ဟောချက်များ စုစည်းမှု (ဆရာကြီး ဤနေရာတွင် စာသားများ ထပ်တိုးနိုင်ပါသည်) ---
     const effects = [
