@@ -191,16 +191,17 @@
     <div class="input-group"> 
         <div class="input-field">
             <label for="dob">မွေးသက္ကရာဇ်</label>
-            <input type="date" id="dob" value="1985-11-08"> 
+            <input type="date" id="dob" value="1981-12-05"> 
         </div>
         <div class="input-field">
             <label for="tob">မွေးချိန်</label>
-            <input type="time" id="tob" value="15:03"> 
+            <input type="time" id="tob" value="17:03"> 
         </div>
         <div class="input-field">
             <label for="city">မွေးဖွားရာမြို့</label>
-            <input type="text" id="city" list="city-list" placeholder="ဥပမာ - Yangon" value="Yangon">
+            <input type="text" id="city" list="city-list" placeholder="ဥပမာ - Myeik" value="Myeik">
             <datalist id="city-list">
+                <option value="Myeik">Myeik (မြိတ်)</option>
                 <option value="Yangon">Yangon (ရန်ကုန်)</option>
                 <option value="Mandalay">Mandalay (မန္တလေး)</option>
                 <option value="Naypyidaw">Naypyidaw (နေပြည်တော်)</option>
@@ -211,14 +212,12 @@
                 <option value="Pathein">Pathein (ပုသိမ်)</option>
                 <option value="Sittwe">Sittwe (စစ်တွေ)</option>
                 <option value="Pyin Oo Lwin">Pyin Oo Lwin (ပြင်ဦးလွင်)</option>
-                <option value="Bangkok">Bangkok (ဘန်ကောက်)</option>
-                <option value="Singapore">Singapore (စင်ကာပူ)</option>
             </datalist> 
         </div>
         <button onclick="calculateNadi()">ဇာတာတွက်ချက်မည်</button> 
     </div> 
 
-    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid (မြန်မာ့ရိုးရာ / တောင်အိန္ဒိယစနစ်ပုံစံ) -->
+    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid (တောင်အိန္ဒိယစံနှုန်းအတိုင်း ရာသီအိမ်များ ပုံသေထားရှိခြင်း) -->
     <!-- h0=မိဿ၊ h1=ပြိဿ၊ h2=မေထုန်၊ h3=ကရကဋ်၊ h4=သိဟ်၊ h5=ကန်၊ h6=တူ၊ h7=ဗြိစ္ဆာ၊ h8=ဓနု၊ h9=မကာရ၊ h10=ကုမ်၊ h11=မိန် -->
     <div class="chart-grid" id="main-chart"> 
         <div class="house" id="h11"><div class="house-id">မိန်</div></div> 
@@ -289,24 +288,19 @@ function checkLicense() {
 }
 
 // ==========================================
-// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - လဂ်/ဘာဝ တစ်အိမ်စောင်းမှု လုံးဝပြုပြင်ပြီး)
+// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - ဂြိုဟ်နှင့် လဂ်နေရာများ ဥပဒေသမှန် ပြန်လည်ညှိနှိုင်းပြီး)
 // ==========================================
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
 
 const cityDatabase = {
+    "myeik": { lat: 12.4379, lon: 98.6021, tz: 6.5 },
     "yangon": { lat: 16.8409, lon: 96.1735, tz: 6.5 },
     "mandalay": { lat: 21.9588, lon: 96.0891, tz: 6.5 },
     "naypyidaw": { lat: 19.7633, lon: 96.0785, tz: 6.5 },
     "bago": { lat: 17.3353, lon: 96.4814, tz: 6.5 },
     "mawlamyine": { lat: 16.4867, lon: 97.6283, tz: 6.5 },
-    "taunggyi": { lat: 20.7884, lon: 97.0337, tz: 6.5 },
-    "monywa": { lat: 22.1142, lon: 95.1324, tz: 6.5 },
-    "pathein": { lat: 16.7840, lon: 94.7314, tz: 6.5 },
-    "sittwe": { lat: 20.1422, lon: 92.8942, tz: 6.5 },
-    "pyin oo lwin": { lat: 22.0362, lon: 96.4674, tz: 6.5 },
-    "bangkok": { lat: 13.7563, lon: 100.5018, tz: 7.0 },
-    "singapore": { lat: 1.3521, lon: 103.8198, tz: 8.0 }
+    "taunggyi": { lat: 20.7884, lon: 97.0337, tz: 6.5 }
 };
 
 async function calculateNadi() { 
@@ -320,12 +314,13 @@ async function calculateNadi() {
     const cityData = cityDatabase[cityInput] || cityDatabase["yangon"];
     
     try { 
-        const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
+        // 🌟 JyotishApp စနစ်အတိုင်း Sidereal (Lahiri/KP) Ayanamsa စစ်စစ်ဖြင့် ဒေတာတောင်းယူခြင်း
+        const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=lahiri&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
         
-        // ရာသီခွင်အမည်များ ပြန်လည်သတ်မှတ်ရန်
+        // အိမ်အမည်များကို ပုံသေ သန့်စင်ပေးရန်
         const signNames = ["မိဿ", "ပြိဿ", "မေထုန်", "ကရကဋ်", "သိဟ်", "ကန်", "တူ", "ဗြိစ္ဆာ", "ဓနု", "မကာရ", "ကုမ်", "မိန်"];
         for(let i=0; i<12; i++) { 
             document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${signNames[i]}</div>`; 
@@ -333,20 +328,21 @@ async function calculateNadi() {
         
         const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'}; 
         
+        // 🌟 🛠️ [MAPPING CORRECTION] 
+        // API တန်ဖိုးများဖြစ်သော 0=Aries(မိဿ), 1=Taurus(ပြိဿ) စနစ်ကို ကွက်တိနေရာကျအောင် တွက်ချက်ခြင်း
         Object.entries(data.positions).forEach(([p, deg]) => { 
-            // 🌟 🛠️ [FIX] အကယ်၍ တစ်အိမ်ရှေ့ရောက်နေပါက (-30 ဒီဂရီ နှုတ်ပေးခြင်းဖြင့်) အိမ်မှန်ကို ပြန်ရွှေ့ပေးသည့် Logic
-            // (အကယ်၍ နှုတ်ပြီးတန်ဖိုး < 0 ဖြစ်သွားပါက ရာသီပတ်ချာလည်စနစ်အရ +360 ထည့်ပေးပါသည်)
-            let correctedDeg = deg - 30; 
-            if (correctedDeg < 0) correctedDeg += 360;
-
-            const sign = Math.floor(correctedDeg / 30); 
+            const sign = Math.floor(deg / 30); 
             
             if(document.getElementById(`h${sign}`)) { 
                 let typeClass = "p-neutral";
                 if(maleficsList.includes(p)) typeClass = "p-malefic";
                 if(beneficsList.includes(p)) typeClass = "p-benefic";
                 
-                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag ${typeClass}">${pAbbr[p] || p} ${Math.floor(correctedDeg%30)}°</span>`; 
+                // လဂ်ဆိုလျှင် 'As' ဟု ပေါ်လွင်စွာပြသရန်
+                let dispName = pAbbr[p] || p;
+                if(p === 'Ascendant') dispName = "As (လဂ်)";
+                
+                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag ${typeClass}">${dispName} ${Math.floor(deg%30)}°</span>`; 
             } 
         }); 
         
@@ -364,10 +360,7 @@ function runNadiLogic(pos, cityName) {
     let chart = {}; 
     
     Object.entries(pos).forEach(([p, deg]) => { 
-        // ဟောချက်တွက်ချက်မှုပိုင်းတွင်လည်း ဒီဂရီအမှန်ကို ပြောင်းလဲအသုံးပြုရန်
-        let correctedDeg = deg - 30;
-        if (correctedDeg < 0) correctedDeg += 360;
-        chart[p] = { house: Math.floor(correctedDeg / 30), degree: correctedDeg % 30 }; 
+        chart[p] = { house: Math.floor(deg / 30), degree: deg % 30 }; 
     }); 
 
     const isAspect = (p1, p2) => { 
@@ -382,7 +375,7 @@ function runNadiLogic(pos, cityName) {
     }; 
 
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဘာဝများကို အမှန်ကန်ဆုံး ပြင်ဆင်တွက်ချက်ထားပါသည်။` },
+        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဂြိုဟ်များကို JyotishApp စံနှုန်းအတိုင်း တိကျစွာ တွက်ချက်ထားပါသည်။` },
         { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု နဒီအမြင်:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
         { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ် နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
