@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="my">
 <head>
@@ -55,7 +56,7 @@
             font-weight: bold;
             color: var(--line);
         }
-        input, select { 
+        input { 
             padding: 11px; 
             border: 2px solid #cfd8dc; 
             border-radius: 8px; 
@@ -64,7 +65,7 @@
             transition: 0.3s;
             background: #fafafa;
         } 
-        input:focus, select:focus { 
+        input:focus { 
             border-color: var(--primary); 
             background: #fff;
         }
@@ -94,7 +95,7 @@
         } 
         .house { 
             border: 1px solid #b0bec5; 
-            height: 100px; 
+            height: 105px; 
             padding: 6px; 
             font-size: 12px; 
             position: relative; 
@@ -125,7 +126,7 @@
         .p-benefic { color: var(--benefic); border-left: 2px solid var(--benefic); }
         .p-malefic { color: var(--malefic); border-left: 2px solid var(--malefic); }
         .p-neutral { color: #37474f; border-left: 2px solid #78909c; }
-        .p-asc { color: #e65100; border-left: 2px solid #ff6d00; background: #fff3e0; font-size: 12px; }
+        .p-asc { color: #e65100; border-left: 2px solid #ff6d00; background: #fff3e0; font-size: 11px; }
 
         .center-box { 
             grid-column: 2 / 4; 
@@ -208,26 +209,17 @@
                 <option value="Taunggyi">Taunggyi (တောင်ကြီး)</option>
             </datalist> 
         </div>
-        <div class="input-field">
-            <label for="ayanamsa">Ayanamsa စနစ်</label>
-            <select id="ayanamsa">
-                <option value="lahiri">Sidereal (Lahiri)</option>
-                <option value="kp">KP System</option>
-                <option value="raman">Raman</option>
-                <option value="tropical">Sayana (Tropical)</option>
-            </select>
-        </div>
-        <button onclick="calculateNadi()" style="margin-top:15px;">ဇာတာတွက်ချက်မည်</button> 
+        <button onclick="calculateNadi()" style="margin-top:16px;">ဇာတာတွက်ချက်မည်</button> 
     </div> 
 
-    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid (သဘာဝတရားအတိုင်း အရှေ့မိုးကုတ်စက်ဝိုင်းမှ ထွက်ပေါ်လာသော လဂ်ကို အခြေခံတွက်ချက်ရန်) -->
+    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid -->
     <div class="chart-grid" id="main-chart"> 
         <div class="house" id="h11"><div class="house-id">မိန်</div></div> 
         <div class="house" id="h0"><div class="house-id">မိဿ</div></div> 
         <div class="house" id="h1"><div class="house-id">ပြိဿ</div></div> 
         <div class="house" id="h2"><div class="house-id">မေထုန်</div></div> 
         <div class="house" id="h10"><div class="house-id">ကုမ်</div></div> 
-        <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br><span style="color:var(--accent); font-size:12px; background:var(--primary); padding:2px 8px; border-radius:10px; margin-top:5px;">Natural Horizon System</span></div> 
+        <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br><span style="color:var(--accent); font-size:12px; background:var(--primary); padding:2px 8px; border-radius:10px; margin-top:5px;">Horizon Astro Engine</span></div> 
         <div class="house" id="h3"><div class="house-id">ကရကဋ်</div></div> 
         <div class="house" id="h9"><div class="house-id">မကာရ</div></div> 
         <div class="house" id="h4"><div class="house-id">သိဟ်</div></div> 
@@ -283,7 +275,7 @@ function checkLicense() {
 }
 
 // ==========================================
-// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - သဘာဝအတိုင်း တိုက်ရိုက်တွက်ချက်စနစ်)
+// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - တိကျသော Format ခွဲထုတ်စနစ်)
 // ==========================================
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
@@ -299,19 +291,33 @@ const cityDatabase = {
 };
 
 async function calculateNadi() { 
-    const dob = document.getElementById('dob').value; 
-    const tob = document.getElementById('tob').value; 
+    const dobValue = document.getElementById('dob').value; 
+    const tobValue = document.getElementById('tob').value; 
     const cityInput = document.getElementById('city').value.trim().toLowerCase();
-    const ayanamsaMode = document.getElementById('ayanamsa').value;
     const resArea = document.getElementById('result-area'); 
     
-    resArea.innerHTML = "<p style='text-align:center; font-weight:bold; color:var(--primary);'>အရှေ့မိုးကုတ်စက်ဝိုင်း လဂ်ဒီဂရီနှင့် ဂြိုဟ်တည်နေရာများကို တိုက်ရိုက်တွက်ချက်နေပါသည်...</p>"; 
+    if(!dobValue || !tobValue) {
+        alert("မွေးသက္ကရာဇ်နှင့် မွေးချိန်ကို ပြည့်စုံစွာ ဖြည့်သွင်းပါရန်။");
+        return;
+    }
+
+    resArea.innerHTML = "<p style='text-align:center; font-weight:bold; color:var(--primary);'>အရှေ့မိုးကုတ်စက်ဝိုင်း ဇာတာဖြစ်ထွန်းမှုကို တိကျစွာ Parameter ခွဲထုတ်တွက်ချက်နေပါသည်...</p>"; 
     
+    // Date နှင့် Time အား API သတ်မှတ်ချက်အတိုင်း ခွဲထုတ်ခြင်း
+    const dateParts = dobValue.split('-'); // [YYYY, MM, DD]
+    const timeParts = tobValue.split(':'); // [HH, MM]
+    
+    const year = dateParts[0];
+    const month = dateParts[1];
+    const day = dateParts[2];
+    const hour = timeParts[0];
+    const min = timeParts[1];
+
     const cityData = cityDatabase[cityInput] || cityDatabase["myeik"];
     
     try { 
-        // Ayanamsa Mode ကို ရွေးချယ်မှုအတိုင်း Dynamic တောင်းယူခြင်း (Tropical ဆိုလျှင် ဆေဒနမနှုတ်ဘဲ အနောက်တိုင်းစံအတိုင်းထွက်မည်)
-        const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=${ayanamsaMode}&mode=${ayanamsaMode === 'tropical' ? 'geocentric' : 'sidereal'}`;
+        // Corrected Parameters: ခွဲထုတ်ထားသော ရက်၊ လ၊ ခုနှစ်၊ နာရီ၊ မိနစ် စနစ်ကို ပေးပို့ခြင်း
+        const queryParams = `year=${year}&month=${month}&day=${day}&hour=${hour}&min=${min}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
@@ -323,7 +329,6 @@ async function calculateNadi() {
         
         const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'}; 
         
-        // 🌟 မိုးကုတ်စက်ဝိုင်းပြောင်းလဲမှုအတိုင်း ဂြိုဟ်နှင့်လဂ်များကို သဘာဝအတိုင်း နေရာချခြင်း
         Object.entries(data.positions).forEach(([p, deg]) => { 
             const signIndex = Math.floor(deg / 30); 
             const remDeg = Math.floor(deg % 30);
@@ -373,11 +378,10 @@ function runNadiLogic(pos, cityName) {
     }; 
 
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့၏ အရှေ့မိုးကုတ်စက်ဝိုင်း ဖြစ်ထွန်းမှု ဒီဂရီများအတိုင်း စနစ်တကျ တွက်ချက်ထားခြင်း ဖြစ်ပါသည်။` },
-        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
-        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ဆရာတစ်ဆူ ဖြစ်တတ်သည်။ တာဝန်ကြီးသော ရာထူးများ ရရှိမည်။" },
-        { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ် နဒီအမြင်:</b> တရားထူး၊ တရားမြတ်များ ရရှိတတ်သည်။ လောကုတ္တရာ ပညာတွင် အလွန်ထူးချွန်မည်။" },
-        { cat: "fortune", check: () => isSameHouse('Sun', 'Mercury'), text: "<b>ဗုဒ္ဓအာဒိတ္တယုဂ် (တနင်္ဂနွေ+ဗုဒ္ဓဟူး အိမ်တူ):</b> ဇာတာရှင်သည် အလွန်ဉာဏ်ပညာထက်မြက်သူ၊ စာပေကျမ်းဂန် တတ်မြောက်သူ ဖြစ်လိမ့်မည်။" }
+        { cat: "info", check: () => true, text: `📍 <b>ဒေသန္တရမှတ်တမ်း:</b> ဇာတာရှင်၏ <b>${cityName.toUpperCase()}</b> မြို့အခြေစိုက် လဂ်နှင့် နဒီဂြိုဟ်အမြင်များကို တိကျသော API parameters စနစ်သစ်ဖြင့် ပေါင်းစပ်တွက်ချက်ထားပါသည်။` },
+        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> စီးပွားဥစ္စာ ရတနာ ရရှိပိုင်ဆိုင်နိုင်သော ကံထူးရှင် ဇာတာဖြစ်ပါသည်။" },
+        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> မိမိလုပ်ငန်းကဏ္ဍတွင် ဆရာတစ်ဆူအဖြစ် ဩဇာတိက္ကမ ကြီးမားတတ်ပါသည်။" },
+        { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ် နဒီအမြင်:</b> လောကုတ္တရာပညာ၊ ဝိညာဉ်ရေးရာနှင့် ဆန်းကြယ်သော ထူးခြားသည့် အသိဉာဏ် ပါရမီ ပါရှိတတ်သည်။" }
     ]; 
 
     let catNames = { 
@@ -397,7 +401,7 @@ function runNadiLogic(pos, cityName) {
         } 
     }); 
 
-    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center; padding:20px;'>ယခုဇာတာအတွက် ထူးခြားသော နဒီယောဂများ မတွေ့ရှိသေးပါ။</p>"; 
+    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center; padding:20px;'>ဆန်းစစ်ချက်များကို ဖော်ပြရန် ဇာတာကွက်ကို ဦးစွာ တွက်ချက်ပေးပါ။</p>"; 
 }
 </script>
 
