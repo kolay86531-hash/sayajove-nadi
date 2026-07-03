@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SayaJove Modern Nadi Astrology</title>
+    <title>SayaJove Modern Nadi Astrology Master System</title>
     <style>
         :root { 
             --primary: #1a237e; 
@@ -166,6 +166,26 @@
 </head>
 <body>
 
+<!-- 🔐 [၁] စနစ် - Device-Based License Key စကားဝှက်မျက်နှာပြင် (Zapya ကူးယူခြင်း လုံးဝကာကွယ်ရေး) -->
+<div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a237e; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; padding: 20px; box-sizing: border-box;">
+    <h2 style="margin-bottom: 10px; font-weight: bold; text-align: center;">SayaJove ဗေဒင်ပညာသင်တန်း</h2>
+    <p style="color: #ffd600; margin-bottom: 20px; text-align: center; font-size: 14px; padding: 0 10px;">
+        ဤ Application သည် ဖုန်းတစ်လုံးချင်းစီအတွက် လိုင်စင်သီးသန့် လိုအပ်ပါသည်။
+    </p>
+    
+    <div style="background: rgba(255,255,255,0.1); border: 1px dashed #ffd600; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; width: 100%; max-width: 300px; box-sizing: border-box;">
+        <span style="font-size: 12px; display: block; color: #b0bec5; margin-bottom: 5px;">ဆရာ့ထံ ပေးပို့ရမည့် ဖုန်း၏ ID:</span>
+        <strong id="device-id-display" style="font-size: 20px; color: #fff; letter-spacing: 2px;">LOADING...</strong>
+    </div>
+    
+    <input type="text" id="license-key" placeholder="လိုင်စင်ကုဒ် (License Key) ရိုက်ထည့်ရန်" style="padding: 12px; width: 100%; max-width: 300px; border-radius: 8px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; color: #333; text-transform: uppercase;">
+    
+    <button onclick="checkLicense()" style="background: #ffd600; color: #1a237e; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; margin-top: 5px;">လိုင်စင်စစ်ဆေးမည်</button>
+    <p id="auth-error" style="color: #ff8a80; margin-top: 15px; font-weight: bold; display: none; text-align: center;">❌ လိုင်စင်ကုဒ် မှားယွင်းနေပါသည်။</p>
+</div>
+
+
+<!-- 📱 [၂] စနစ် - ဗေဒင်တွက်ချက်ခြင်းနှင့် Main Application မျက်နှာပြင် -->
 <div class="container">
     <div class="header-title">SayaJove နဒီနက္ခတ်ဗေဒင် Master System</div>
     
@@ -179,9 +199,9 @@
             <input type="time" id="tob" value="15:03"> 
         </div>
         <div class="input-field">
+            <!-- 🗺️ မွေးဖွားရာမြို့ ထည့်သွင်းရွေးချယ်နိုင်သည့် စနစ် -->
             <label for="city">မွေးဖွားရာမြို့</label>
             <input type="text" id="city" list="city-list" placeholder="ဥပမာ - Yangon" value="Yangon">
-            <!-- မြို့အမည်များ အလိုအလျောက် အကြံပြုပေးရန် ဒေတာစာရင်း -->
             <datalist id="city-list">
                 <option value="Yangon">Yangon (ရန်ကုန်)</option>
                 <option value="Mandalay">Mandalay (မန္တလေး)</option>
@@ -200,6 +220,7 @@
         <button onclick="calculateNadi()">ဇာတာတွက်ချက်မည်</button> 
     </div> 
 
+    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid -->
     <div class="chart-grid" id="main-chart"> 
         <div class="house" id="h11"><div class="house-id">12</div></div> 
         <div class="house" id="h0"><div class="house-id">1</div></div> 
@@ -220,11 +241,64 @@
 </div>
 
 <script>
+// ==========================================
+// 🔐 LICENSE KEY SECURITY LOGIC (စနစ် ၁)
+// ==========================================
+
+function generateDeviceID() {
+    let deviceID = localStorage.getItem('astro_device_id');
+    if (!deviceID) {
+        deviceID = Math.floor(100000 + Math.random() * 900000).toString();
+        localStorage.setItem('astro_device_id', deviceID);
+    }
+    return deviceID;
+}
+
+const currentDeviceID = generateDeviceID();
+document.getElementById('device-id-display').innerText = currentDeviceID;
+
+// 🔑 ID ပေါ်မူတည်ပြီး Key ထုတ်ပေးမည့် ပုံသေနည်း (Formula) - ဆရာ့စိတ်ကြိုက် သင်္ချာပြောင်းလဲနိုင်သည်
+function generateLicenseFromID(id) {
+    let secretMath = parseInt(id) * 3;
+    return secretMath + "-JOVE";
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const isLicensed = localStorage.getItem('app_licensed_status');
+    const savedKey = localStorage.getItem('app_saved_license_key');
+    
+    if (isLicensed === 'true' && savedKey === generateLicenseFromID(currentDeviceID)) {
+        document.getElementById('auth-screen').style.display = 'none';
+    } else {
+        localStorage.removeItem('app_licensed_status');
+        document.getElementById('auth-screen').style.display = 'flex';
+    }
+});
+
+function checkLicense() {
+    const userKey = document.getElementById('license-key').value.trim().toUpperCase();
+    const errorMsg = document.getElementById('auth-error');
+    const correctKey = generateLicenseFromID(currentDeviceID);
+    
+    if (userKey === correctKey) {
+        localStorage.setItem('app_licensed_status', 'true');
+        localStorage.setItem('app_saved_license_key', userKey);
+        document.getElementById('auth-screen').style.display = 'none';
+        alert("🎉 လိုင်စင် အောင်မြင်စွာ သော့ဖွင့်ပြီးပါပြီ။");
+    } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('license-key').value = "";
+    }
+}
+
+// ==========================================
+// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - လဂ်/ဘာဝ အမှန်ပြင်ဆင်ပြီး)
+// ==========================================
+
 const owners = { Sun:[4], Moon:[3], Mars:[0,7], Mercury:[2,5], Jupiter:[8,11], Venus:[1,6], Saturn:[9,10] };
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
 
-// မြို့အလိုက် တည်နေရာပြ Coordinates Database (ဆရာ့လိုအပ်ချက်အရ ဖြည့်စွက်နိုင်ပါသည်)
 const cityDatabase = {
     "yangon": { lat: 16.8409, lon: 96.1735, tz: 6.5 },
     "mandalay": { lat: 21.9588, lon: 96.0891, tz: 6.5 },
@@ -248,12 +322,11 @@ async function calculateNadi() {
     
     resArea.innerHTML = "<p style='text-align:center; font-weight:bold; color:var(--primary);'>တွက်ချက်နေပါသည်...</p>"; 
     
-    // ရွေးချယ်လိုက်သော မြို့၏ Geo-data ကို ရှာဖွေခြင်း (မတွေ့ပါက Default အဖြစ် ရန်ကုန်မြို့ သတ်မှတ်သည်)
     const cityData = cityDatabase[cityInput] || cityDatabase["yangon"];
     
     try { 
-        // API သို့ ရက်စွဲ၊ အချိန်၊ Latitude၊ Longitude နှင့် Timezone တို့ကို တပြိုင်တည်း ပေးပို့ခြင်း
-        const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}`;
+        // 🌟 ဆရာ့မူရင်းစနစ်အတိုင်း လဂ်နှင့် ဘာဝ အမှန်ထွက်စေရန် ချိန်ညှိထားသော API Route
+        const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
@@ -281,6 +354,10 @@ async function calculateNadi() {
     } 
 }
 
+// ==========================================
+// 📜 [၃] စနစ် - နဒီဗေဒင်ဟောချက်နှင့် Logic ထပ်တိုးစနစ်
+// ==========================================
+
 function runNadiLogic(pos, cityName) { 
     let resultHTML = ""; 
     let chart = {}; 
@@ -295,56 +372,33 @@ function runNadiLogic(pos, cityName) {
         return [0, 4, 8, 2, 6, 10].includes(diff); 
     }; 
 
-    const isInterchange = (p1, p2) => { 
-        if (!chart[p1] || !chart[p2]) return false; 
-        return owners[p1]?.includes(chart[p2].house) && owners[p2]?.includes(chart[p1].house); 
-    }; 
-
     const isSameHouse = (p1, p2) => { 
         if (!chart[p1] || !chart[p2]) return false; 
         return chart[p1].house === chart[p2].house; 
     }; 
 
-    const getDistFromJupiter = (planet) => { 
-        if (!chart['Jupiter'] || !chart[planet]) return 0; 
-        let jPos = chart['Jupiter'].house; 
-        let pPos = chart[planet].house; 
-        return (pPos - jPos + 12) % 12 + 1; 
-    }; 
-
-    const getMaleficScore = () => { 
-        let score = 0; 
-        if (!chart) return 0; 
-        if (isSameHouse('Moon', 'Rahu')) score += 30; 
-        if (isSameHouse('Moon', 'Saturn')) score += 20; 
-        if (isSameHouse('Moon', 'Mars')) score += 20; 
-        if (isSameHouse('Jupiter', 'Rahu')) score += 25; 
-        if (isSameHouse('Jupiter', 'Ketu')) score += 15; 
-        if (isSameHouse('Mars', 'Saturn')) score += 30; 
-        if (isSameHouse('Sun', 'Ketu')) score += 15; 
-        return score; 
-    }; 
-
-    // --- ဟောချက်များ Array ---
+    // ✨ ဟောချက်များကို ဤနေရာတွင် ကော်မာ (,) ခံ၍ ထပ်တိုးနိုင်ပါသည် ✨
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ လောင်ဂျီတွဒ်နှင့် လတ္တီတွဒ်များကို အခြေခံ၍ လဂ်ဒီဂရီနှင့် နက္ခတ်များကို အတိကျဆုံး တွက်ချက်ထားပါသည်။` },
-        { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
-        { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ်</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
-        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus') && isAspect('Jupiter', 'Mercury'), text: "<b>ဓနသိဒ္ဓိယောဂ</b> ငွေကြေးကံ အလွန်ကောင်းမွန်ပြီး ပညာရှိများ၏ အကူအညီ ရရှိမည်။" },
-        { cat: "marriage", check: () => isAspect('Venus', 'Ketu'), text: "<b>သောကြာ+ကိတ်</b> အမျိုးသားဇာတာရှင်အတွက် အိမ်ထောင်ဖက်မှာ ဘာသာတရား ကိုင်းရှိုင်းသူ ဖြစ်တတ်သည်။" },
-        { cat: "fortune", check: () => isAspect('Sun', 'Jupiter'), text: "<b>တနင်္ဂနွေ+ကြာသပတေး</b> အစိုးရ သို့မဟုတ် အကြီးအကဲများ၏ အထောက်အပံ့ ရရှိမည်။ ဂုဏ်သိက္ခာကြီးမားသူဖြစ်မည်။" },
-        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
-        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး</b> အလုပ်အကိုင်တွင် ဆရာတစ်ဆူ ဖြစ်တတ်သည်။ တာဝန်ကြီးသော ရာထူးများ ရရှိမည်။" },
-        { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ်</b> တရားထူး၊ တရားမြတ်များ ရရှိတတ်သည်။ လောကုတ္တရာ ပညာတွင် အလွန်ထူးချွန်မည်။" },
-        { cat: "fortune", check: () => isAspect('Jupiter', 'Moon'), text: "<b>ဂဇကေသရီယုဂ် (Gaja-Kesari Yoga)</b> ကြာသပတေးနှင့် တနင်္လာတို့ ဆက်သွယ်မှုရရှိခြင်းကြောင့် ဖြစ်ပေါ်လာသော အလွန်မွန်မြတ်သည့် ယုဂ်ဖြစ်သည်။ ဤဇာတာရှင်သည် ဆင်ဖြူတော်နှင့် ခြင်္သေ့မင်းတို့ကဲ့သို့ အဖျက်အဆီးဟူသမျှကို ကျော်လွှားနိုင်သော ဩဇာအာဏာရှိမည်။" },
-        { cat: "warning", check: () => getMaleficScore() >= 50, text: "<b style='color:red;'>⚠️ အထူးသတိပြုရန် - အဆိုးလွှမ်းမိုးမှုကြီးမားသောဇာတာ:</b> ဤဇာတာတွင် အတွင်းစိတ်ဓာတ်နှင့် အကျင့်စာရိတ္တကို ဖျက်ဆီးမည့် အဆိုးဂြိုဟ်များ၏ လွှမ်းမိုးမှုက အားကောင်းနေနိုင်ပါသည်။" },
-        { cat: "fortune", check: () => getDistFromJupiter('Rahu') === 1, text: "<b>ရာဟုသည် ကြာသပတေးနှင့်အတူရှိနေခြင်း (၁ အိမ်မြောက်):</b> ဇာတာရှင်သည် အလွန်ဉာဏ်ကောင်းသော်လည်း စိတ်ကူးယဉ်ဆန်ခြင်း၊ လျှို့ဝှက်ချက်များပြားခြင်းနှင့် ဘဝအစပိုင်းတွင် အခက်အခဲများ ကြုံရတတ်သည်။" }
+        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဘာဝများကို အမှန်ကန်ဆုံး တွက်ချက်ထားပါသည်။` },
+        { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု နဒီအမြင်:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
+        { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ် နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
+        { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
+        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ဆရာတစ်ဆူ ဖြစ်တတ်သည်။ တတာဝန်ကြီးသော ရာထူးများ ရရှိမည်။" },
+        { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ် နဒီအမြင်:</b> တရားထူး၊ တရားမြတ်များ ရရှိတတ်သည်။ လောကုတ္တရာ ပညာတွင် အလွန်ထူးချွန်မည်။" },
+        { cat: "fortune", check: () => isAspect('Jupiter', 'Moon'), text: "<b>ဂဇကေသရီယုဂ် (Gaja-Kesari Yoga):</b> ကြာသပတေးနှင့် တနင်္လာတို့ ဆက်သွယ်မှုရရှိသဖြင့် ဇာတာရှင်သည် အဖျက်အဆီးဟူသမျှကို ကျော်လွှားနိုင်သော ဩဇာအာဏာရှိမည်။" },
+        
+        // ➕ ဟောချက်အသစ်များ ထပ်တိုးရန် ဥပမာ -
+        { 
+            cat: "fortune", 
+            check: () => isSameHouse('Sun', 'Mercury'), 
+            text: "<b>Bugdha-Aditya Yoga (တနင်္ဂနွေ+ဗုဒ္ဓဟူး အိမ်တူ):</b> ဇာတာရှင်သည် အလွန်ဉာဏ်ပညာထက်မြက်သူ၊ စာပေကျမ်းဂန် တတ်မြောက်သူ ဖြစ်လိမ့်မည်။" 
+        }
     ]; 
 
     let catNames = { 
         info: "🗺️ ဒေသန္တရ အချက်အလက်",
         fortune: "✨ ကံကြမ္မာနှင့် ယုဂ်များ", 
-        career: "💼 အလုပ်အကိုင်နှင့် Сီးပွားရေး", 
+        career: "💼 အလုပ်အကိုင်နှင့် စီးပွားရေး", 
         marriage: "❤️ အိမ်ထောင်ရေးနှင့် လူမှုရေး", 
         family: "🏡 မိသားစုရေးရာ", 
         spiritual: "🧘 ဝိညာဉ်ရေးရာနှင့် ပါရမီ",
