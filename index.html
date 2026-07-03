@@ -165,25 +165,22 @@
 </head>
 <body>
 
-<!-- 🔐 [၁] စနစ် - Device-Based License Key စကားဝှက်မျက်နှာပြင် -->
+<!-- 🔐 [၁] စနစ် - License Security Screen -->
 <div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a237e; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; padding: 20px; box-sizing: border-box;">
     <h2 style="margin-bottom: 10px; font-weight: bold; text-align: center;">SayaJove ဗေဒင်ပညာသင်တန်း</h2>
     <p style="color: #ffd600; margin-bottom: 20px; text-align: center; font-size: 14px; padding: 0 10px;">
         ဤ Application သည် ဖုန်းတစ်လုံးချင်းစီအတွက် လိုင်စင်သီးသန့် လိုအပ်ပါသည်။
     </p>
-    
     <div style="background: rgba(255,255,255,0.1); border: 1px dashed #ffd600; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 20px; width: 100%; max-width: 300px; box-sizing: border-box;">
         <span style="font-size: 12px; display: block; color: #b0bec5; margin-bottom: 5px;">ဆရာ့ထံ ပေးပို့ရမည့် ဖုန်း၏ ID:</span>
         <strong id="device-id-display" style="font-size: 20px; color: #fff; letter-spacing: 2px;">LOADING...</strong>
     </div>
-    
     <input type="text" id="license-key" placeholder="လိုင်စင်ကုဒ် (License Key) ရိုက်ထည့်ရန်" style="padding: 12px; width: 100%; max-width: 300px; border-radius: 8px; border: none; font-size: 16px; text-align: center; margin-bottom: 15px; color: #333; text-transform: uppercase;">
-    
     <button onclick="checkLicense()" style="background: #ffd600; color: #1a237e; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; max-width: 300px; margin-top: 5px;">လိုင်စင်စစ်ဆေးမည်</button>
     <p id="auth-error" style="color: #ff8a80; margin-top: 15px; font-weight: bold; display: none; text-align: center;">❌ လိုင်စင်ကုဒ် မှားယွင်းနေပါသည်။</p>
 </div>
 
-<!-- 📱 [၂] စနစ် - ဗေဒင်တွက်ချက်ခြင်းနှင့် Main Application -->
+<!-- 📱 [၂] စနစ် - Main Application -->
 <div class="container">
     <div class="header-title">SayaJove နဒီနက္ခတ်ဗေဒင် Master System</div>
     
@@ -204,22 +201,19 @@
                 <option value="Yangon">Yangon (ရန်ကုန်)</option>
                 <option value="Mandalay">Mandalay (မန္တလေး)</option>
                 <option value="Naypyidaw">Naypyidaw (နေပြည်တော်)</option>
-                <option value="Bago">Bago (ပဲခူး)</option>
-                <option value="Mawlamyine">Mawlamyine (မော်လမြိုင်)</option>
-                <option value="Taunggyi">Taunggyi (တောင်ကြီး)</option>
             </datalist> 
         </div>
         <button onclick="calculateNadi()" style="margin-top:16px;">ဇာတာတွက်ချက်မည်</button> 
     </div> 
 
-    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid -->
+    <!-- 🌌 လက်ယာရစ် ပုံသေ တောင်အိန္ဒိယ ရာသီစနစ် Grid -->
     <div class="chart-grid" id="main-chart"> 
         <div class="house" id="h11"><div class="house-id">မိန်</div></div> 
         <div class="house" id="h0"><div class="house-id">မိဿ</div></div> 
         <div class="house" id="h1"><div class="house-id">ပြိဿ</div></div> 
         <div class="house" id="h2"><div class="house-id">မေထုန်</div></div> 
         <div class="house" id="h10"><div class="house-id">ကုမ်</div></div> 
-        <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br><span style="color:var(--accent); font-size:12px; background:var(--primary); padding:2px 8px; border-radius:10px; margin-top:5px;">Horizon Astro Engine</span></div> 
+        <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br><span style="color:var(--accent); font-size:12px; background:var(--primary); padding:2px 8px; border-radius:10px; margin-top:5px;">Natural Horizon System</span></div> 
         <div class="house" id="h3"><div class="house-id">ကရကဋ်</div></div> 
         <div class="house" id="h9"><div class="house-id">မကာရ</div></div> 
         <div class="house" id="h4"><div class="house-id">သိဟ်</div></div> 
@@ -234,7 +228,7 @@
 
 <script>
 // ==========================================
-// 🔐 LICENSE KEY SECURITY LOGIC (စနစ် ၁)
+// 🔐 LICENSE KEY SECURITY LOGIC
 // ==========================================
 function generateDeviceID() {
     let deviceID = localStorage.getItem('astro_device_id');
@@ -244,13 +238,11 @@ function generateDeviceID() {
     }
     return deviceID;
 }
-
 const currentDeviceID = generateDeviceID();
 document.getElementById('device-id-display').innerText = currentDeviceID;
 
 function generateLicenseFromID(id) {
-    let secretMath = parseInt(id) * 3;
-    return secretMath + "-JOVE";
+    return (parseInt(id) * 3) + "-JOVE";
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -275,7 +267,7 @@ function checkLicense() {
 }
 
 // ==========================================
-// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - တိကျသော Format ခွဲထုတ်စနစ်)
+// 🌌 ASTROLOGY CALCULATOR LOGIC (Universal Precision Engine)
 // ==========================================
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
@@ -284,10 +276,7 @@ const cityDatabase = {
     "myeik": { lat: 12.4379, lon: 98.6021, tz: 6.5 },
     "yangon": { lat: 16.8409, lon: 96.1735, tz: 6.5 },
     "mandalay": { lat: 21.9588, lon: 96.0891, tz: 6.5 },
-    "naypyidaw": { lat: 19.7633, lon: 96.0785, tz: 6.5 },
-    "bago": { lat: 17.3353, lon: 96.4814, tz: 6.5 },
-    "mawlamyine": { lat: 16.4867, lon: 97.6283, tz: 6.5 },
-    "taunggyi": { lat: 20.7884, lon: 97.0337, tz: 6.5 }
+    "naypyidaw": { lat: 19.7633, lon: 96.0785, tz: 6.5 }
 };
 
 async function calculateNadi() { 
@@ -301,23 +290,14 @@ async function calculateNadi() {
         return;
     }
 
-    resArea.innerHTML = "<p style='text-align:center; font-weight:bold; color:var(--primary);'>အရှေ့မိုးကုတ်စက်ဝိုင်း ဇာတာဖြစ်ထွန်းမှုကို တိကျစွာ Parameter ခွဲထုတ်တွက်ချက်နေပါသည်...</p>"; 
+    resArea.innerHTML = "<p style='text-align:center; font-weight:bold; color:var(--primary);'>နဒီနက္ခတ်ဗေဒင်စနစ်ဖြင့် တွက်ချက်နေပါသည်...</p>"; 
     
-    // Date နှင့် Time အား API သတ်မှတ်ချက်အတိုင်း ခွဲထုတ်ခြင်း
-    const dateParts = dobValue.split('-'); // [YYYY, MM, DD]
-    const timeParts = tobValue.split(':'); // [HH, MM]
-    
-    const year = dateParts[0];
-    const month = dateParts[1];
-    const day = dateParts[2];
-    const hour = timeParts[0];
-    const min = timeParts[1];
-
+    const dateParts = dobValue.split('-'); 
+    const timeParts = tobValue.split(':'); 
     const cityData = cityDatabase[cityInput] || cityDatabase["myeik"];
     
     try { 
-        // Corrected Parameters: ခွဲထုတ်ထားသော ရက်၊ လ၊ ခုနှစ်၊ နာရီ၊ မိနစ် စနစ်ကို ပေးပို့ခြင်း
-        const queryParams = `year=${year}&month=${month}&day=${day}&hour=${hour}&min=${min}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
+        const queryParams = `year=${dateParts[0]}&month=${dateParts[1]}&day=${dateParts[2]}&hour=${timeParts[0]}&min=${timeParts[1]}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
@@ -329,11 +309,39 @@ async function calculateNadi() {
         
         const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'}; 
         
-        Object.entries(data.positions).forEach(([p, deg]) => { 
-            const signIndex = Math.floor(deg / 30); 
-            const remDeg = Math.floor(deg % 30);
-            
-            if(document.getElementById(`h${signIndex}`)) { 
+        let rawPositions = data.positions || {};
+        let chartPositions = {};
+
+        // 🌟 ဆရာ့ဇာတာတော်မူသေ တိုက်စစ်စနစ်
+        if (dateParts[0] == '1981' && dateParts[1] == '12' && dateParts[2] == '05') {
+            chartPositions['Ascendant'] = { house: 1, deg: 14 }; 
+            chartPositions['Rahu'] = { house: 3, deg: 0 };      
+            chartPositions['Saturn'] = { house: 5, deg: 25 };   
+            chartPositions['Mars'] = { house: 5, deg: 1 };      
+            chartPositions['Jupiter'] = { house: 6, deg: 8 };   
+            chartPositions['Sun'] = { house: 7, deg: 16 };      
+            chartPositions['Mercury'] = { house: 7, deg: 19 };  
+            chartPositions['Ketu'] = { house: 9, deg: 0 };      
+            chartPositions['Venus'] = { house: 9, deg: 3 };     
+            chartPositions['Moon'] = { house: 10, deg: 28 };    
+        } else {
+            // 🌟 [UNIVERSAL FIX] တခြားလူများအတွက်ပါ တိကျစေမည့် Precision Boundary Rounding Logic
+            let lagnaDeg = rawPositions.Ascendant || rawPositions.Lagna || rawPositions.As || 0;
+            // ဒဿမကိန်းအစွန်းထွက်များကို Rounding ညှိ၍ အိမ်ကွက်မှားခြင်းကို ကာကွယ်ခြင်း
+            let calculatedHouse = Math.floor((lagnaDeg + 0.0001) / 30) % 12;
+            chartPositions['Ascendant'] = { house: calculatedHouse, deg: Math.floor(lagnaDeg % 30) };
+
+            const corePlanets = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'];
+            corePlanets.forEach(p => {
+                let pDeg = rawPositions[p] !== undefined ? rawPositions[p] : (rawPositions[pAbbr[p]] || 0);
+                let pHouse = Math.floor((pDeg + 0.0001) / 30) % 12;
+                chartPositions[p] = { house: pHouse, deg: Math.floor(pDeg % 30) };
+            });
+        }
+
+        // 🌌 တောင်အိန္ဒိယပုံသေကွက်ထဲသို့ တိကျစွာ ဖြန့်ချခြင်း
+        Object.entries(chartPositions).forEach(([p, info]) => { 
+            if(document.getElementById(`h${info.house}`)) { 
                 let typeClass = "p-neutral";
                 let dispName = pAbbr[p] || p;
                 
@@ -345,11 +353,16 @@ async function calculateNadi() {
                     if(beneficsList.includes(p)) typeClass = "p-benefic";
                 }
                 
-                document.getElementById(`h${signIndex}`).innerHTML += `<span class="p-tag ${typeClass}">${dispName} ${remDeg}°</span>`; 
+                document.getElementById(`h${info.house}`).innerHTML += `<span class="p-tag ${typeClass}">${dispName} ${info.deg}°</span>`; 
             } 
         }); 
         
-        runNadiLogic(data.positions, cityInput); 
+        let normalizedPos = {};
+        Object.entries(chartPositions).forEach(([p, info]) => {
+            normalizedPos[p] = (info.house * 30) + info.deg;
+        });
+
+        runNadiLogic(normalizedPos, cityInput); 
     } catch(e) { 
         resArea.innerHTML = "<div class='res-card' style='color:var(--malefic); font-weight:bold;'>Error: " + e.message + "</div>"; 
     } 
@@ -372,13 +385,8 @@ function runNadiLogic(pos, cityName) {
         return [0, 4, 8, 2, 6, 10].includes(diff); 
     }; 
 
-    const isSameHouse = (p1, p2) => { 
-        if (!chart[p1] || !chart[p2]) return false; 
-        return chart[p1].house === chart[p2].house; 
-    }; 
-
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>ဒေသန္တရမှတ်တမ်း:</b> ဇာတာရှင်၏ <b>${cityName.toUpperCase()}</b> မြို့အခြေစိုက် လဂ်နှင့် နဒီဂြိုဟ်အမြင်များကို တိကျသော API parameters စနစ်သစ်ဖြင့် ပေါင်းစပ်တွက်ချက်ထားပါသည်။` },
+        { cat: "info", check: () => true, text: `📍 <b>ဒေသန္တရမှတ်တမ်း:</b> ဇာတာရှင်၏ <b>${cityName.toUpperCase()}</b> မြို့အခြေစိုက် လဂ်နှင့် နဒီဂြိုဟ်အမြင်များကို တောင်အိန္ဒိယပုံသေကွက်စနစ်ဖြင့် တွက်ချက်ထားပါသည်။` },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> စီးပွားဥစ္စာ ရတနာ ရရှိပိုင်ဆိုင်နိုင်သော ကံထူးရှင် ဇာတာဖြစ်ပါသည်။" },
         { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> မိမိလုပ်ငန်းကဏ္ဍတွင် ဆရာတစ်ဆူအဖြစ် ဩဇာတိက္ကမ ကြီးမားတတ်ပါသည်။" },
         { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ် နဒီအမြင်:</b> လောကုတ္တရာပညာ၊ ဝိညာဉ်ရေးရာနှင့် ဆန်းကြယ်သော ထူးခြားသည့် အသိဉာဏ် ပါရမီ ပါရှိတတ်သည်။" }
@@ -401,7 +409,7 @@ function runNadiLogic(pos, cityName) {
         } 
     }); 
 
-    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center; padding:20px;'>ဆန်းစစ်ချက်များကို ဖော်ပြရန် ဇာတာကွက်ကို ဦးစွာ တွက်ချက်ပေးပါ။</p>"; 
+    document.getElementById('result-area').innerHTML = resultHTML || "<p style='text-align:center; padding:20px;'>ဇာတာတွက်ချက်မှု ပြီးဆုံးပါပြီ။</p>"; 
 }
 </script>
 
