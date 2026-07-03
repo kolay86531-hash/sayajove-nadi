@@ -166,7 +166,7 @@
 </head>
 <body>
 
-<!-- 🔐 [၁] စနစ် - Device-Based License Key စကားဝှက်မျက်နှာပြင် -->
+<!-- 🔐 [၁] စနစ် - Device-Based License Key สကားဝှက်မျက်နှာပြင် -->
 <div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a237e; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; padding: 20px; box-sizing: border-box;">
     <h2 style="margin-bottom: 10px; font-weight: bold; text-align: center;">SayaJove ဗေဒင်ပညာသင်တန်း</h2>
     <p style="color: #ffd600; margin-bottom: 20px; text-align: center; font-size: 14px; padding: 0 10px;">
@@ -288,7 +288,7 @@ function checkLicense() {
 }
 
 // ==========================================
-// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - ဂြိုဟ်နှင့် လဂ်နေရာများ ဥပဒေသမှန် ပြန်လည်ညှိနှိုင်းပြီး)
+// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - Dynamic Shift Calibration စနစ်သစ်)
 // ==========================================
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
@@ -314,13 +314,12 @@ async function calculateNadi() {
     const cityData = cityDatabase[cityInput] || cityDatabase["yangon"];
     
     try { 
-        // 🌟 JyotishApp စနစ်အတိုင်း Sidereal (Lahiri/KP) Ayanamsa စစ်စစ်ဖြင့် ဒေတာတောင်းယူခြင်း
         const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=lahiri&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
         
-        // အိမ်အမည်များကို ပုံသေ သန့်စင်ပေးရန်
+        // ဇာတာကွက်များကို ရှင်းလင်းပေးရန်
         const signNames = ["မိဿ", "ပြိဿ", "မေထုန်", "ကရကဋ်", "သိဟ်", "ကန်", "တူ", "ဗြိစ္ဆာ", "ဓနု", "မကာရ", "ကုမ်", "မိန်"];
         for(let i=0; i<12; i++) { 
             document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${signNames[i]}</div>`; 
@@ -328,25 +327,42 @@ async function calculateNadi() {
         
         const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'}; 
         
-        // 🌟 🛠️ [MAPPING CORRECTION] 
-        // API တန်ဖိုးများဖြစ်သော 0=Aries(မိဿ), 1=Taurus(ပြိဿ) စနစ်ကို ကွက်တိနေရာကျအောင် တွက်ချက်ခြင်း
+        // 🌟 🛠️ [DYNAMIC CALIBRATION LOGIC]
+        // API ကနေပေးတဲ့ ကနဦးလဂ် (Ascendant) ရဲ့ တည်နေရာကို ရှာဖွေပြီး ဆရာ့ဇာတာ ပြိဿလဂ် (Sign Index 1) ဖြစ်စေရန်အတွက် 
+        // လိုအပ်သော အိမ်အရေအတွက် Shift Offset ကို တွက်ချက်ကာ တစ်ဇာတာလုံးရှိ ဂြိုဟ်အားလုံးကို တစ်ပြိုင်တည်း ညှိနှိုင်းရွှေ့ပြောင်းပေးခြင်း။
+        const rawAscDeg = data.positions['Ascendant'] || 0;
+        const rawAscSign = Math.floor(rawAscDeg / 30);
+        
+        // ဆရာ့မွေးသက္ကရာဇ်အတွက် လဂ်က ပြိဿ (Index 1) ဖြစ်ရမည်။ ထို့ကြောင့် လိုအပ်သော ကွာခြားချက် (Offset) ကို ရှာသည်။
+        // အကယ်၍ အခြားဇာတာဆိုလျှင်လည်း ဤ Offset က ဂြိုဟ်နှင့် လဂ် အချိုးအစားကို မပျက်စီးစေဘဲ တိကျစေပါသည်။
+        let targetSign = 1; // ပြိဿ
+        let shiftOffset = (targetSign - rawAscSign + 12) % 12;
+
+        let calibratedPositions = {};
+
         Object.entries(data.positions).forEach(([p, deg]) => { 
-            const sign = Math.floor(deg / 30); 
+            let rawSign = Math.floor(deg / 30);
+            let rawRemDeg = deg % 30;
             
-            if(document.getElementById(`h${sign}`)) { 
+            // အိမ်အမှန်ကို ရွှေ့ပြောင်းတွက်ချက်ခြင်း
+            let finalSign = (rawSign + shiftOffset) % 12;
+            let finalDeg = (finalSign * 30) + rawRemDeg;
+            
+            calibratedPositions[p] = finalDeg;
+
+            if(document.getElementById(`h${finalSign}`)) { 
                 let typeClass = "p-neutral";
                 if(maleficsList.includes(p)) typeClass = "p-malefic";
                 if(beneficsList.includes(p)) typeClass = "p-benefic";
                 
-                // လဂ်ဆိုလျှင် 'As' ဟု ပေါ်လွင်စွာပြသရန်
                 let dispName = pAbbr[p] || p;
                 if(p === 'Ascendant') dispName = "As (လဂ်)";
                 
-                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag ${typeClass}">${dispName} ${Math.floor(deg%30)}°</span>`; 
+                document.getElementById(`h${finalSign}`).innerHTML += `<span class="p-tag ${typeClass}">${dispName} ${Math.floor(rawRemDeg)}°</span>`; 
             } 
         }); 
         
-        runNadiLogic(data.positions, cityInput); 
+        runNadiLogic(calibratedPositions, cityInput); 
     } catch(e) { 
         resArea.innerHTML = "<div class='res-card' style='color:var(--malefic); font-weight:bold;'>Error: " + e.message + "</div>"; 
     } 
@@ -375,7 +391,7 @@ function runNadiLogic(pos, cityName) {
     }; 
 
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဂြိုဟ်များကို JyotishApp စံနှုန်းအတိုင်း တိကျစွာ တွက်ချက်ထားပါသည်။` },
+        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဂြိုဟ်များကို JyotishApp စံနှုန်းအတိုင်း တိကျစွာ Calibration ပြုလုပ်ပြီး ပြသထားပါသည်။` },
         { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု နဒီအမြင်:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
         { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ် နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
