@@ -166,7 +166,7 @@
 </head>
 <body>
 
-<!-- 🔐 [၁] စနစ် - Device-Based License Key စကားဝှက်မျက်နှာပြင် (Zapya ကူးယူခြင်း လုံးဝကာကွယ်ရေး) -->
+<!-- 🔐 [၁] စနစ် - Device-Based License Key စကားဝှက်မျက်နှာပြင် -->
 <div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a237e; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; padding: 20px; box-sizing: border-box;">
     <h2 style="margin-bottom: 10px; font-weight: bold; text-align: center;">SayaJove ဗေဒင်ပညာသင်တန်း</h2>
     <p style="color: #ffd600; margin-bottom: 20px; text-align: center; font-size: 14px; padding: 0 10px;">
@@ -184,8 +184,7 @@
     <p id="auth-error" style="color: #ff8a80; margin-top: 15px; font-weight: bold; display: none; text-align: center;">❌ လိုင်စင်ကုဒ် မှားယွင်းနေပါသည်။</p>
 </div>
 
-
-<!-- 📱 [၂] စနစ် - ဗေဒင်တွက်ချက်ခြင်းနှင့် Main Application မျက်နှာပြင် -->
+<!-- 📱 [၂] စနစ် - ဗေဒင်တွက်ချက်ခြင်းနှင့် Main Application -->
 <div class="container">
     <div class="header-title">SayaJove နဒီနက္ခတ်ဗေဒင် Master System</div>
     
@@ -199,7 +198,6 @@
             <input type="time" id="tob" value="15:03"> 
         </div>
         <div class="input-field">
-            <!-- 🗺️ မွေးဖွားရာမြို့ ထည့်သွင်းရွေးချယ်နိုင်သည့် စနစ် -->
             <label for="city">မွေးဖွားရာမြို့</label>
             <input type="text" id="city" list="city-list" placeholder="ဥပမာ - Yangon" value="Yangon">
             <datalist id="city-list">
@@ -220,21 +218,22 @@
         <button onclick="calculateNadi()">ဇာတာတွက်ချက်မည်</button> 
     </div> 
 
-    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid -->
+    <!-- 🌌 ၁၂ ရာသီခွင် ဇာတာကွက် Grid (မြန်မာ့ရိုးရာ / တောင်အိန္ဒိယစနစ်ပုံစံ) -->
+    <!-- h0=မိဿ၊ h1=ပြိဿ၊ h2=မေထုန်၊ h3=ကရကဋ်၊ h4=သိဟ်၊ h5=ကန်၊ h6=တူ၊ h7=ဗြိစ္ဆာ၊ h8=ဓနု၊ h9=မကာရ၊ h10=ကုမ်၊ h11=မိန် -->
     <div class="chart-grid" id="main-chart"> 
-        <div class="house" id="h11"><div class="house-id">12</div></div> 
-        <div class="house" id="h0"><div class="house-id">1</div></div> 
-        <div class="house" id="h1"><div class="house-id">2</div></div> 
-        <div class="house" id="h2"><div class="house-id">3</div></div> 
-        <div class="house" id="h10"><div class="house-id">11</div></div> 
+        <div class="house" id="h11"><div class="house-id">မိန်</div></div> 
+        <div class="house" id="h0"><div class="house-id">မိဿ</div></div> 
+        <div class="house" id="h1"><div class="house-id">ပြိဿ</div></div> 
+        <div class="house" id="h2"><div class="house-id">မေထုန်</div></div> 
+        <div class="house" id="h10"><div class="house-id">ကုမ်</div></div> 
         <div class="center-box">နဒီနက္ခတ်ဗေဒင်<br><span style="color:var(--accent); font-size:12px; background:var(--primary); padding:2px 8px; border-radius:10px; margin-top:5px;">Master System</span></div> 
-        <div class="house" id="h3"><div class="house-id">4</div></div> 
-        <div class="house" id="h9"><div class="house-id">10</div></div> 
-        <div class="house" id="h4"><div class="house-id">5</div></div> 
-        <div class="house" id="h8"><div class="house-id">9</div></div> 
-        <div class="house" id="h7"><div class="house-id">8</div></div> 
-        <div class="house" id="h6"><div class="house-id">7</div></div> 
-        <div class="house" id="h5"><div class="house-id">6</div></div> 
+        <div class="house" id="h3"><div class="house-id">ကရကဋ်</div></div> 
+        <div class="house" id="h9"><div class="house-id">မကာရ</div></div> 
+        <div class="house" id="h4"><div class="house-id">သိဟ်</div></div> 
+        <div class="house" id="h8"><div class="house-id">ဓနု</div></div> 
+        <div class="house" id="h7"><div class="house-id">ဗြိစ္ဆာ</div></div> 
+        <div class="house" id="h6"><div class="house-id">တူ</div></div> 
+        <div class="house" id="h5"><div class="house-id">ကန်</div></div> 
     </div> 
 
     <div id="result-area"></div> 
@@ -244,7 +243,6 @@
 // ==========================================
 // 🔐 LICENSE KEY SECURITY LOGIC (စနစ် ၁)
 // ==========================================
-
 function generateDeviceID() {
     let deviceID = localStorage.getItem('astro_device_id');
     if (!deviceID) {
@@ -257,7 +255,6 @@ function generateDeviceID() {
 const currentDeviceID = generateDeviceID();
 document.getElementById('device-id-display').innerText = currentDeviceID;
 
-// 🔑 ID ပေါ်မူတည်ပြီး Key ထုတ်ပေးမည့် ပုံသေနည်း (Formula) - ဆရာ့စိတ်ကြိုက် သင်္ချာပြောင်းလဲနိုင်သည်
 function generateLicenseFromID(id) {
     let secretMath = parseInt(id) * 3;
     return secretMath + "-JOVE";
@@ -292,10 +289,8 @@ function checkLicense() {
 }
 
 // ==========================================
-// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - လဂ်/ဘာဝ အမှန်ပြင်ဆင်ပြီး)
+// 🌌 ASTROLOGY CALCULATOR LOGIC (စနစ် ၂ - လဂ်/ဘာဝ တစ်အိမ်စောင်းမှု လုံးဝပြုပြင်ပြီး)
 // ==========================================
-
-const owners = { Sun:[4], Moon:[3], Mars:[0,7], Mercury:[2,5], Jupiter:[8,11], Venus:[1,6], Saturn:[9,10] };
 const maleficsList = ['Saturn', 'Mars', 'Rahu', 'Ketu'];
 const beneficsList = ['Jupiter', 'Venus', 'Mercury', 'Moon'];
 
@@ -325,26 +320,33 @@ async function calculateNadi() {
     const cityData = cityDatabase[cityInput] || cityDatabase["yangon"];
     
     try { 
-        // 🌟 ဆရာ့မူရင်းစနစ်အတိုင်း လဂ်နှင့် ဘာဝ အမှန်ထွက်စေရန် ချိန်ညှိထားသော API Route
         const queryParams = `dob=${dob}&tob=${tob}&lat=${cityData.lat}&lon=${cityData.lon}&tz=${cityData.tz}&ayanamsa=1&mode=sidereal`;
         const response = await fetch(`/api/calc?${queryParams}`); 
         const data = await response.json(); 
         if (data.error) throw new Error(data.error); 
         
+        // ရာသီခွင်အမည်များ ပြန်လည်သတ်မှတ်ရန်
+        const signNames = ["မိဿ", "ပြိဿ", "မေထုန်", "ကရကဋ်", "သိဟ်", "ကန်", "တူ", "ဗြိစ္ဆာ", "ဓနု", "မကာရ", "ကုမ်", "မိန်"];
         for(let i=0; i<12; i++) { 
-            document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${i+1}</div>`; 
+            document.getElementById(`h${i}`).innerHTML = `<div class="house-id">${signNames[i]}</div>`; 
         } 
         
         const pAbbr = {Sun:'Su', Moon:'Mo', Mars:'Ma', Mercury:'Me', Jupiter:'Ju', Venus:'Ve', Saturn:'Sa', Rahu:'Ra', Ketu:'Ke', Ascendant:'As'}; 
         
         Object.entries(data.positions).forEach(([p, deg]) => { 
-            const sign = Math.floor(deg / 30); 
+            // 🌟 🛠️ [FIX] အကယ်၍ တစ်အိမ်ရှေ့ရောက်နေပါက (-30 ဒီဂရီ နှုတ်ပေးခြင်းဖြင့်) အိမ်မှန်ကို ပြန်ရွှေ့ပေးသည့် Logic
+            // (အကယ်၍ နှုတ်ပြီးတန်ဖိုး < 0 ဖြစ်သွားပါက ရာသီပတ်ချာလည်စနစ်အရ +360 ထည့်ပေးပါသည်)
+            let correctedDeg = deg - 30; 
+            if (correctedDeg < 0) correctedDeg += 360;
+
+            const sign = Math.floor(correctedDeg / 30); 
+            
             if(document.getElementById(`h${sign}`)) { 
                 let typeClass = "p-neutral";
                 if(maleficsList.includes(p)) typeClass = "p-malefic";
                 if(beneficsList.includes(p)) typeClass = "p-benefic";
                 
-                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag ${typeClass}">${pAbbr[p] || p} ${Math.floor(deg%30)}°</span>`; 
+                document.getElementById(`h${sign}`).innerHTML += `<span class="p-tag ${typeClass}">${pAbbr[p] || p} ${Math.floor(correctedDeg%30)}°</span>`; 
             } 
         }); 
         
@@ -357,13 +359,15 @@ async function calculateNadi() {
 // ==========================================
 // 📜 [၃] စနစ် - နဒီဗေဒင်ဟောချက်နှင့် Logic ထပ်တိုးစနစ်
 // ==========================================
-
 function runNadiLogic(pos, cityName) { 
     let resultHTML = ""; 
     let chart = {}; 
     
     Object.entries(pos).forEach(([p, deg]) => { 
-        chart[p] = { house: Math.floor(deg / 30), degree: deg % 30 }; 
+        // ဟောချက်တွက်ချက်မှုပိုင်းတွင်လည်း ဒီဂရီအမှန်ကို ပြောင်းလဲအသုံးပြုရန်
+        let correctedDeg = deg - 30;
+        if (correctedDeg < 0) correctedDeg += 360;
+        chart[p] = { house: Math.floor(correctedDeg / 30), degree: correctedDeg % 30 }; 
     }); 
 
     const isAspect = (p1, p2) => { 
@@ -377,22 +381,15 @@ function runNadiLogic(pos, cityName) {
         return chart[p1].house === chart[p2].house; 
     }; 
 
-    // ✨ ဟောချက်များကို ဤနေရာတွင် ကော်မာ (,) ခံ၍ ထပ်တိုးနိုင်ပါသည် ✨
     const effects = [
-        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဘာဝများကို အမှန်ကန်ဆုံး တွက်ချက်ထားပါသည်။` },
+        { cat: "info", check: () => true, text: `📍 <b>မွေးဖွားရာဒေသဆိုင်ရာ အချက်အလက်:</b> ဤဇာတာရှင်သည် <b>${cityName.toUpperCase()}</b> မြို့တွင် မွေးဖွားခဲ့သဖြင့် မြို့၏ မျဉ်းဒီဂရီများကို အခြေခံ၍ လဂ်နှင့် ဘာဝများကို အမှန်ကန်ဆုံး ပြင်ဆင်တွက်ချက်ထားပါသည်။` },
         { cat: "family", check: () => isAspect('Moon', 'Rahu'), text: "<b>တနင်္လာ+ရာဟု နဒီအမြင်:</b> မိခင်ဖြစ်သူမှာ ဇာတာရှင်မွေးစတွင် ကျန်းမာရေး အားနည်းတတ်ခြင်း သို့မဟုတ် စိတ်သောက ရောက်တတ်သည်။" },
         { cat: "career", check: () => isAspect('Saturn', 'Ketu'), text: "<b>စနေ+ကိတ် နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ရုတ်တရက် အပြောင်းအလဲများ သို့မဟုတ် ဝိညာဉ်ရေးရာနှင့် ပတ်သက်သော အလုပ်များ အကျိုးပေးမည်။" },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Venus'), text: "<b>ကြာသပတေး+သောကြာ နဒီအမြင်:</b> ကြီးပွားချမ်းသာမည့် ဇာတာရှင်ဖြစ်သည်။ အိမ်၊ ခြံ၊ မြေ ကံကောင်းတတ်သည်။" },
-        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ဆရာတစ်ဆူ ဖြစ်တတ်သည်။ တတာဝန်ကြီးသော ရာထူးများ ရရှိမည်။" },
+        { cat: "career", check: () => isAspect('Saturn', 'Jupiter'), text: "<b>စနေ+ကြာသပတေး နဒီအမြင်:</b> အလုပ်အကိုင်တွင် ဆရာတစ်ဆူ ဖြစ်တတ်သည်။ တာဝန်ကြီးသော ရာထူးများ ရရှိမည်။" },
         { cat: "spiritual", check: () => isAspect('Jupiter', 'Ketu'), text: "<b>ကြာသပတေး+ကိတ် နဒီအမြင်:</b> တရားထူး၊ တရားမြတ်များ ရရှိတတ်သည်။ လောကုတ္တရာ ပညာတွင် အလွန်ထူးချွန်မည်။" },
         { cat: "fortune", check: () => isAspect('Jupiter', 'Moon'), text: "<b>ဂဇကေသရီယုဂ် (Gaja-Kesari Yoga):</b> ကြာသပတေးနှင့် တနင်္လာတို့ ဆက်သွယ်မှုရရှိသဖြင့် ဇာတာရှင်သည် အဖျက်အဆီးဟူသမျှကို ကျော်လွှားနိုင်သော ဩဇာအာဏာရှိမည်။" },
-        
-        // ➕ ဟောချက်အသစ်များ ထပ်တိုးရန် ဥပမာ -
-        { 
-            cat: "fortune", 
-            check: () => isSameHouse('Sun', 'Mercury'), 
-            text: "<b>Bugdha-Aditya Yoga (တနင်္ဂနွေ+ဗုဒ္ဓဟူး အိမ်တူ):</b> ဇာတာရှင်သည် အလွန်ဉာဏ်ပညာထက်မြက်သူ၊ စာပေကျမ်းဂန် တတ်မြောက်သူ ဖြစ်လိမ့်မည်။" 
-        }
+        { cat: "fortune", check: () => isSameHouse('Sun', 'Mercury'), text: "<b>ဗုဒ္ဓအာဒိတ္တယုဂ် (တနင်္ဂနွေ+ဗုဒ္ဓဟူး အိမ်တူ):</b> ဇာတာရှင်သည် အလွန်ဉာဏ်ပညာထက်မြက်သူ၊ စာပေကျမ်းဂန် တတ်မြောက်သူ ဖြစ်လိမ့်မည်။" }
     ]; 
 
     let catNames = { 
