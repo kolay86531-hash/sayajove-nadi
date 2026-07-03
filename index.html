@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="my">
 <head>
@@ -40,7 +41,6 @@
         <h2 style="color:var(--primary); margin-bottom: 5px;">လိုင်စင်သတ်မှတ်ရန်</h2>
         <p style="color:#666; font-size:14px;">အောက်ပါ စက်ကုဒ်ကို ဆရာ့ဆီသို့ ပေးပို့၍ လိုင်စင် Key တောင်းခံပါ၊၊</p>
         
-        <!-- ကျောင်းသားဆရာ့ဆီ ပို့ရမယ့် ကုဒ် -->
         <div class="key-box" id="request-key-display">Loading...</div>
         
         <input type="text" id="activation_key_input" placeholder="ဆရာ့ထံမှရသော လိုင်စင် Key ကို ထည့်ပါ" class="full-width" style="text-align: center; text-transform: uppercase;">
@@ -81,21 +81,17 @@
 </div>
 
 <script>
-// လျှို့ဝှက်ဆားဗစ်သင်္ကေတ (ဆရာ့ Generator နှင့် ကိုက်ညီရပါမည်)
 const SECRET_SALT = 8491; 
 
-// ၁။ App ပွင့်လာတာနဲ့ ကျောင်းသားအတွက် ပုံသေဖြစ်မယ့် စက်ကုဒ်တစ်ခု ထုတ်ပေးခြင်း
 function generateRequestKey() {
     let id = localStorage.getItem('jove_device_id');
     if (!id) {
-        // ဖုန်းတစ်ခုချင်းစီအတွက် မတူညီတဲ့ ဂဏန်း ၅ လုံး ကျပန်းထုတ်ပေးခြင်း
         id = Math.floor(10000 + Math.random() * 90000).toString();
         localStorage.setItem('jove_device_id', id);
     }
     document.getElementById('request-key-display').innerText = "JOVE-" + id;
 }
 
-// App ဖွင့်လျှင် လိုင်စင်အောင်မြင်ပြီးသား ရှိမရှိ အရင်စစ်ဆေးခြင်း
 window.onload = function() {
     generateRequestKey();
     if (localStorage.getItem('app_licensed') === 'true') {
@@ -103,12 +99,9 @@ window.onload = function() {
     }
 };
 
-// ၂။ ဆရာပေးလိုက်တဲ့ ကုဒ် ဟုတ်မဟုတ် ဖုန်းထဲမှာတင် တွက်ချက်စစ်ဆေးခြင်း
 function validateActivationKey() {
     const inputKey = document.getElementById('activation_key_input').value.trim().toUpperCase();
     const deviceId = localStorage.getItem('jove_device_id');
-    
-    // အတွက်အချက် သင်္ချာနည်းလမ်းဖြင့် လိုင်စင်မှန်မမှန် စစ်ဆေးခြင်း
     const expectedKey = "KEY-" + (parseInt(deviceId) * 3 + SECRET_SALT);
 
     if (inputKey === expectedKey) {
@@ -124,9 +117,9 @@ function showMainApp() {
     document.getElementById('main-app-content').style.display = 'block';
 }
 
-// --- မူလ ဗေဒင်တွက်ချက်မှုဆိုင်ရာ Logic များ ---
 const owners = { Sun:[4], Moon:[3], Mars:[0,7], Mercury:[2,5], Jupiter:[8,11], Venus:[1,6], Saturn:[9,10] };
 
+// ✨ ရှင်းလင်းသန့်စင်ပြီးသား ဗေဒင်တွက်ချက်မှု Function စစ်စစ်
 async function calculateLocalNadi() {
     const dob = document.getElementById('dob').value;
     const tob = document.getElementById('tob').value;
@@ -153,12 +146,15 @@ async function calculateLocalNadi() {
             }
         });
 
-        runNadiLogic(data.positions);
+        // 🎯 Python (Server) ဘက်မှ တွက်ချက်ပေးလိုက်သော တိကျသေချာသည့် အဟောများကို တိုက်ရိုက် ပြသခြင်း
+        resArea.innerHTML = data.result_html;
+
     } catch(e) {
         resArea.innerHTML = "<div class='res-card' style='color:red;'>⚠️ " + e.message + "</div>";
     }
 }
 
+// 📦 မူလ HTML ထဲက အဟောဟောင်းများကို လုံးဝ မပျက်စီးစေရန် ဒီအတိုင်း ဆက်လက် သိမ်းဆည်းထားခြင်း
 function runNadiLogic(pos) {
     let resultHTML = "";
     let chart = {};
